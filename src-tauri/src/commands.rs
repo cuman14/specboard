@@ -325,3 +325,37 @@ fn format_timestamp(secs: u64) -> String {
     let year = 1970 + epoch_days / 365;
     format!("{}-01-01T00:00:00Z", year)
 }
+
+#[tauri::command]
+pub async fn open_in_explorer(path: String) -> Result<(), String> {
+    let folder_path = Path::new(&path);
+    if !folder_path.exists() {
+        return Err(format!("Path does not exist: {}", path));
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        Command::new("explorer")
+            .arg(folder_path)
+            .spawn()
+            .map_err(|e| format!("Failed to open explorer: {}", e))?;
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        Command::new("open")
+            .arg(folder_path)
+            .spawn()
+            .map_err(|e| format!("Failed to open finder: {}", e))?;
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        Command::new("xdg-open")
+            .arg(folder_path)
+            .spawn()
+            .map_err(|e| format!("Failed to open file manager: {}", e))?;
+    }
+
+    Ok(())
+}

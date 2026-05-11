@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { BookOpen, GitBranch, Kanban, Layers, Settings } from "lucide-react";
+import { BookOpen, GitBranch, Kanban, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
@@ -15,7 +15,11 @@ export default function UtilityBar() {
       style={{ width: "var(--spacing-utility-bar, 48px)", minWidth: 48 }}
     >
       <div className="mb-4 flex h-10 w-10 items-center justify-center">
-        <Layers size={20} className="text-[#6366f1]" strokeWidth={1.5} />
+        <img
+          src="/logo.png"
+          alt="Specboard"
+          className="h-7 w-7 object-contain"
+        />
       </div>
 
       <nav className="flex flex-1 flex-col items-center gap-1">

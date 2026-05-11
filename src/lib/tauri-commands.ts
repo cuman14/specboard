@@ -105,6 +105,10 @@ export async function readSpecsTree(
   return invoke<SpecFile[]>("read_specs_tree", { workspacePath });
 }
 
+export async function openInExplorer(path: string): Promise<void> {
+  return invoke<void>("open_in_explorer", { path });
+}
+
 export async function watchWorkspace(path: string): Promise<void> {
   return invoke<void>("watch_workspace", { path });
 }

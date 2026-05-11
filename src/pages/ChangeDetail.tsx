@@ -244,16 +244,17 @@ export default function ChangeDetail() {
           activeTab === "tasks" ? (
             <TasksView content={content} />
           ) : (
-            <div style={{ color: "#c7c4d7", fontFamily: "var(--font-sans)" }}>
+            <div style={{ color: "#d1d5db", fontFamily: "var(--font-sans)" }}>
               <ReactMarkdown
                 components={{
                   h1: ({ children }) => (
                     <h1
                       style={{
-                        color: "#dae2fd",
-                        fontSize: "1.4rem",
+                        color: "#f3f4f6",
+                        fontSize: "1.5rem",
                         fontWeight: 700,
                         marginBottom: "0.75rem",
+                        lineHeight: 1.3,
                       }}
                     >
                       {children}
@@ -262,10 +263,11 @@ export default function ChangeDetail() {
                   h2: ({ children }) => (
                     <h2
                       style={{
-                        color: "#dae2fd",
-                        fontSize: "1.1rem",
+                        color: "#e5e7eb",
+                        fontSize: "1.2rem",
                         fontWeight: 600,
-                        margin: "1rem 0 0.5rem",
+                        margin: "1.25rem 0 0.75rem",
+                        lineHeight: 1.3,
                       }}
                     >
                       {children}
@@ -274,10 +276,11 @@ export default function ChangeDetail() {
                   h3: ({ children }) => (
                     <h3
                       style={{
-                        color: "#c7c4d7",
-                        fontSize: "0.95rem",
+                        color: "#d1d5db",
+                        fontSize: "1rem",
                         fontWeight: 600,
-                        margin: "0.75rem 0 0.4rem",
+                        margin: "1rem 0 0.5rem",
+                        lineHeight: 1.3,
                       }}
                     >
                       {children}
@@ -286,28 +289,34 @@ export default function ChangeDetail() {
                   p: ({ children }) => (
                     <p
                       style={{
-                        color: "#c7c4d7",
-                        lineHeight: 1.7,
-                        marginBottom: "0.75rem",
+                        color: "#d1d5db",
+                        lineHeight: 1.8,
+                        marginBottom: "1rem",
                       }}
                     >
                       {children}
                     </p>
                   ),
                   li: ({ children }) => (
-                    <li style={{ color: "#c7c4d7", marginBottom: "0.25rem" }}>
+                    <li
+                      style={{
+                        color: "#d1d5db",
+                        marginBottom: "0.35rem",
+                        lineHeight: 1.7,
+                      }}
+                    >
                       {children}
                     </li>
                   ),
                   code: ({ children }) => (
                     <code
                       style={{
-                        background: "#222a3d",
-                        color: "#6366f1",
-                        padding: "0.1em 0.4em",
-                        borderRadius: 3,
+                        background: "#1e293b",
+                        color: "#818cf8",
+                        padding: "0.15em 0.5em",
+                        borderRadius: 4,
                         fontFamily: "var(--font-mono)",
-                        fontSize: "0.85em",
+                        fontSize: "0.875em",
                       }}
                     >
                       {children}
@@ -327,12 +336,39 @@ export default function ChangeDetail() {
                     </pre>
                   ),
                   strong: ({ children }) => (
-                    <strong style={{ color: "#dae2fd", fontWeight: 600 }}>
+                    <strong style={{ color: "#f3f4f6", fontWeight: 700 }}>
                       {children}
                     </strong>
                   ),
+                  a: ({ children, href }) => (
+                    <a
+                      href={href}
+                      style={{ color: "#818cf8", textDecoration: "underline" }}
+                    >
+                      {children}
+                    </a>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote
+                      style={{
+                        borderLeft: "3px solid #6366f1",
+                        paddingLeft: "1rem",
+                        marginLeft: 0,
+                        color: "#9ca3af",
+                      }}
+                    >
+                      {children}
+                    </blockquote>
+                  ),
                   hr: () => (
-                    <hr style={{ borderColor: "#464554", margin: "1rem 0" }} />
+                    <hr
+                      style={{
+                        borderColor: "#4b5563",
+                        margin: "1.25rem 0",
+                        borderStyle: "solid",
+                        borderWidth: "1px 0 0 0",
+                      }}
+                    />
                   ),
                 }}
               >
@@ -341,7 +377,7 @@ export default function ChangeDetail() {
             </div>
           )
         ) : (
-          <p className="text-sm text-[#908fa0]">Unable to load content</p>
+          <p className="text-sm text-[#a1a5b7]">Unable to load content</p>
         )}
       </div>
     </div>

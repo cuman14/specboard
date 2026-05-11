@@ -11,6 +11,7 @@ pub fn run() {
             commands::read_artifact,
             commands::run_openspec_command,
             commands::read_specs_tree,
+            commands::open_in_explorer,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

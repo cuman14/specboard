@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
+import { useMemo } from "react";
 
 interface Task {
   id: string;
@@ -34,7 +34,9 @@ function parseTasks(markdown: string): Layer[] {
     }
 
     // Detect tasks: - [x] or - [ ]
-    const taskMatch = line.match(/^[\s-]*\[([x ])\]\s+\*{0,2}([^*\n]+)\*{0,2}/i);
+    const taskMatch = line.match(
+      /^[\s-]*\[([x ])\]\s+\*{0,2}([^*\n]+)\*{0,2}/i,
+    );
     if (taskMatch && currentLayer) {
       const done = taskMatch[1].toLowerCase() === "x";
       const label = taskMatch[2].trim();
@@ -52,7 +54,9 @@ function parseTasks(markdown: string): Layer[] {
   if (layers.length === 0) {
     const defaultLayer: Layer = { title: "Tasks", tasks: [] };
     for (const line of lines) {
-      const taskMatch = line.match(/^[\s-]*\[([x ])\]\s+\*{0,2}([^*\n]+)\*{0,2}/i);
+      const taskMatch = line.match(
+        /^[\s-]*\[([x ])\]\s+\*{0,2}([^*\n]+)\*{0,2}/i,
+      );
       if (taskMatch) {
         defaultLayer.tasks.push({
           id: `task-${defaultLayer.tasks.length}`,
@@ -77,9 +81,7 @@ export default function TasksView({ content }: { content: string }) {
   const layers = useMemo(() => parseTasks(content), [content]);
 
   if (layers.length === 0) {
-    return (
-      <p className="text-sm text-[#908fa0]">No tasks found</p>
-    );
+    return <p className="text-sm text-[#908fa0]">No tasks found</p>;
   }
 
   const totalTasks = layers.flatMap((l) => l.tasks).length;
@@ -91,13 +93,20 @@ export default function TasksView({ content }: { content: string }) {
       {/* Progress bar */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-[#908fa0]">{doneTasks} / {totalTasks} tasks completed</span>
-          <span className="font-medium text-[#dae2fd]">{pct}%</span>
+          <span className="text-[#a1a5b7]">
+            {doneTasks} / {totalTasks} tasks completed
+          </span>
+          <span className="font-medium text-[#e8ecf4]">{pct}%</span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#222a3d]">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-[#222a3d]">
           <div
             className="h-full rounded-full bg-[#6366f1] transition-all duration-300"
             style={{ width: `${pct}%` }}
+            aria-label={`Progress: ${pct}%`}
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
           />
         </div>
       </div>
@@ -108,11 +117,15 @@ export default function TasksView({ content }: { content: string }) {
         return (
           <div key={layer.title} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-[#908fa0]"
-                style={{ fontFamily: "var(--font-mono)" }}>
+              <h3
+                className="text-xs font-semibold uppercase tracking-widest text-[#a1a5b7]"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
                 {layer.title}
               </h3>
-              <span className="text-xs text-[#464554]">{layerDone}/{layer.tasks.length}</span>
+              <span className="text-xs text-[#6b7280]">
+                {layerDone}/{layer.tasks.length}
+              </span>
             </div>
             <div className="flex flex-col gap-1.5">
               {layer.tasks.map((task) => {
@@ -120,23 +133,36 @@ export default function TasksView({ content }: { content: string }) {
                 return (
                   <div
                     key={task.id}
-                    className={`flex items-start gap-3 rounded border px-3 py-2.5 transition-colors ${
+                    className={`flex cursor-pointer items-start gap-3 rounded border px-3 py-2.5 transition-colors focus-within:ring-1 focus-within:ring-[#6366f1] ${
                       task.done
-                        ? "border-[#22c55e]/20 bg-[#22c55e]/5"
-                        : "border-[#464554] bg-[#171f33]"
+                        ? "border-[#22c55e]/30 bg-[#22c55e]/10"
+                        : "border-[#4b5563] bg-[#171f33]"
                     }`}
+                    tabIndex={0}
+                    role="listitem"
+                    aria-checked={task.done}
                   >
                     {task.done ? (
-                      <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-[#22c55e]" strokeWidth={2} />
+                      <CheckCircle2
+                        size={15}
+                        className="mt-0.5 shrink-0 text-[#22c55e]"
+                        strokeWidth={2}
+                      />
                     ) : (
-                      <Circle size={15} className="mt-0.5 shrink-0 text-[#464554]" strokeWidth={1.5} />
+                      <Circle
+                        size={15}
+                        className="mt-0.5 shrink-0 text-[#6b7280]"
+                        strokeWidth={1.5}
+                      />
                     )}
                     <div className="flex flex-1 flex-wrap items-start gap-2">
                       {tag && (
                         <span
                           className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold"
                           style={{
-                            background: task.done ? "rgba(34,197,94,0.12)" : "rgba(99,102,241,0.15)",
+                            background: task.done
+                              ? "rgba(34,197,94,0.12)"
+                              : "rgba(99,102,241,0.15)",
                             color: task.done ? "#22c55e" : "#6366f1",
                             fontFamily: "var(--font-mono)",
                           }}
@@ -144,7 +170,9 @@ export default function TasksView({ content }: { content: string }) {
                           {tag}
                         </span>
                       )}
-                      <span className={`text-xs leading-relaxed ${task.done ? "text-[#908fa0] line-through" : "text-[#c7c4d7]"}`}>
+                      <span
+                        className={`text-xs leading-relaxed ${task.done ? "text-[#9ca3af] line-through" : "text-[#d1d5db]"}`}
+                      >
                         {text}
                       </span>
                     </div>

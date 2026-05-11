@@ -35,7 +35,7 @@ function FileTreeNode({
             setIsOpen((v) => !v);
             onSelect(file);
           }}
-          className={`flex w-full items-center gap-1.5 px-2 py-1 text-left text-xs transition-colors ${
+          className={`flex w-full cursor-pointer items-center gap-1.5 px-2 py-1 text-left text-xs transition-colors focus:outline-none focus:ring-1 focus:ring-[#6366f1] ${
             isSelected
               ? "bg-[#222a3d] text-[#dae2fd]"
               : "text-[#c7c4d7] hover:bg-[#1c2438] hover:text-[#dae2fd]"
@@ -58,13 +58,13 @@ function FileTreeNode({
           {isOpen ? (
             <FolderOpen
               size={13}
-              className="shrink-0 text-[#f59e0b]"
+              className="shrink-0 text-[#fbbf24]"
               strokeWidth={1.5}
             />
           ) : (
             <Folder
               size={13}
-              className="shrink-0 text-[#f59e0b]"
+              className="shrink-0 text-[#fbbf24]"
               strokeWidth={1.5}
             />
           )}
@@ -87,7 +87,7 @@ function FileTreeNode({
   return (
     <button
       onClick={() => onSelect(file)}
-      className={`flex w-full items-center gap-1.5 py-1 text-left text-xs transition-colors ${
+      className={`flex w-full cursor-pointer items-center gap-1.5 py-1 text-left text-xs transition-colors focus:outline-none focus:ring-1 focus:ring-[#6366f1] ${
         isSelected
           ? "bg-[#222a3d] text-[#dae2fd]"
           : "text-[#c7c4d7] hover:bg-[#1c2438] hover:text-[#dae2fd]"
@@ -201,7 +201,7 @@ export default function SpecsExplorer() {
                 {selectedFile.name}
               </span>
               {selectedFile.lastModified && (
-                <span className="text-xs text-[#908fa0]">
+                <span className="text-xs text-[#a1a5b7]">
                   {formatRelativeTime(selectedFile.lastModified)}
                 </span>
               )}
@@ -215,7 +215,7 @@ export default function SpecsExplorer() {
                 <div
                   className="prose prose-invert prose-sm max-w-none"
                   style={{
-                    color: "#c7c4d7",
+                    color: "#d1d5db",
                     fontFamily: "var(--font-sans)",
                   }}
                 >
@@ -224,10 +224,11 @@ export default function SpecsExplorer() {
                       h1: ({ children }) => (
                         <h1
                           style={{
-                            color: "#dae2fd",
-                            fontSize: "1.4rem",
+                            color: "#f3f4f6",
+                            fontSize: "1.5rem",
                             fontWeight: 700,
                             marginBottom: "0.75rem",
+                            lineHeight: 1.3,
                           }}
                         >
                           {children}
@@ -236,10 +237,11 @@ export default function SpecsExplorer() {
                       h2: ({ children }) => (
                         <h2
                           style={{
-                            color: "#dae2fd",
-                            fontSize: "1.1rem",
+                            color: "#e5e7eb",
+                            fontSize: "1.2rem",
                             fontWeight: 600,
-                            margin: "1rem 0 0.5rem",
+                            margin: "1.25rem 0 0.75rem",
+                            lineHeight: 1.3,
                           }}
                         >
                           {children}
@@ -248,10 +250,11 @@ export default function SpecsExplorer() {
                       h3: ({ children }) => (
                         <h3
                           style={{
-                            color: "#c7c4d7",
-                            fontSize: "0.95rem",
+                            color: "#d1d5db",
+                            fontSize: "1rem",
                             fontWeight: 600,
-                            margin: "0.75rem 0 0.4rem",
+                            margin: "1rem 0 0.5rem",
+                            lineHeight: 1.3,
                           }}
                         >
                           {children}
@@ -260,9 +263,9 @@ export default function SpecsExplorer() {
                       p: ({ children }) => (
                         <p
                           style={{
-                            color: "#c7c4d7",
-                            lineHeight: 1.7,
-                            marginBottom: "0.75rem",
+                            color: "#d1d5db",
+                            lineHeight: 1.8,
+                            marginBottom: "1rem",
                           }}
                         >
                           {children}
@@ -270,7 +273,11 @@ export default function SpecsExplorer() {
                       ),
                       li: ({ children }) => (
                         <li
-                          style={{ color: "#c7c4d7", marginBottom: "0.25rem" }}
+                          style={{
+                            color: "#d1d5db",
+                            marginBottom: "0.35rem",
+                            lineHeight: 1.7,
+                          }}
                         >
                           {children}
                         </li>
@@ -278,12 +285,12 @@ export default function SpecsExplorer() {
                       code: ({ children }) => (
                         <code
                           style={{
-                            background: "#222a3d",
-                            color: "#6366f1",
-                            padding: "0.1em 0.4em",
-                            borderRadius: 3,
+                            background: "#1e293b",
+                            color: "#818cf8",
+                            padding: "0.15em 0.5em",
+                            borderRadius: 4,
                             fontFamily: "var(--font-mono)",
-                            fontSize: "0.85em",
+                            fontSize: "0.875em",
                           }}
                         >
                           {children}
@@ -303,13 +310,41 @@ export default function SpecsExplorer() {
                         </pre>
                       ),
                       strong: ({ children }) => (
-                        <strong style={{ color: "#dae2fd", fontWeight: 600 }}>
+                        <strong style={{ color: "#f3f4f6", fontWeight: 700 }}>
                           {children}
                         </strong>
                       ),
+                      a: ({ children, href }) => (
+                        <a
+                          href={href}
+                          style={{
+                            color: "#818cf8",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          {children}
+                        </a>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote
+                          style={{
+                            borderLeft: "3px solid #6366f1",
+                            paddingLeft: "1rem",
+                            marginLeft: 0,
+                            color: "#9ca3af",
+                          }}
+                        >
+                          {children}
+                        </blockquote>
+                      ),
                       hr: () => (
                         <hr
-                          style={{ borderColor: "#464554", margin: "1rem 0" }}
+                          style={{
+                            borderColor: "#4b5563",
+                            margin: "1.25rem 0",
+                            borderStyle: "solid",
+                            borderWidth: "1px 0 0 0",
+                          }}
                         />
                       ),
                     }}
@@ -318,7 +353,7 @@ export default function SpecsExplorer() {
                   </ReactMarkdown>
                 </div>
               ) : (
-                <p className="m-auto max-w-sm text-center text-xs text-[#ef4444]">
+                <p className="m-auto max-w-sm text-center text-xs text-[#f87171]">
                   {loadError ?? "Unable to load file"}
                 </p>
               )}
@@ -326,8 +361,8 @@ export default function SpecsExplorer() {
           </>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center gap-3">
-            <BookOpen size={36} className="text-[#464554]" strokeWidth={1} />
-            <p className="text-sm text-[#908fa0]">Select a spec file to view</p>
+            <BookOpen size={36} className="text-[#4b5563]" strokeWidth={1} />
+            <p className="text-sm text-[#a1a5b7]">Select a spec file to view</p>
           </div>
         )}
       </div>
