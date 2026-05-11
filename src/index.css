@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b1326;
+  --color-surface: #171f33;
+  --color-surface-high: #222a3d;
+  --color-surface-highest: #2d3449;
+  --color-primary: #6366f1;
+  --color-primary-dim: #4f46e5;
+  --color-secondary: #0ea5e9;
+  --color-text: #dae2fd;
+  --color-text-muted: #c7c4d7;
+  --color-text-subtle: #908fa0;
+  --color-border: #464554;
+  --color-border-subtle: #2d3449;
+  --color-border-active: #6366f1;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #0ea5e9;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  --spacing-utility-bar: 48px;
+  --spacing-sidebar: 240px;
+}
+
+:root {
+  --background: 222 47% 10%;
+  --foreground: 225 80% 91%;
+  --card: 222 42% 14%;
+  --card-foreground: 225 80% 91%;
+  --popover: 222 42% 14%;
+  --popover-foreground: 225 80% 91%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 199 89% 48%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 222 28% 22%;
+  --muted-foreground: 240 10% 73%;
+  --accent: 222 28% 22%;
+  --accent-foreground: 225 80% 91%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 247 16% 30%;
+  --input: 247 16% 30%;
+  --ring: 239 84% 67%;
+  --radius: 0.25rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-subtle);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.tauri-drag-region {
+  -webkit-app-region: drag;
+}

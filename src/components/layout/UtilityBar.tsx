@@ -1,0 +1,57 @@
+import { cn } from "@/lib/utils";
+import { BookOpen, GitBranch, Kanban, Layers, Settings } from "lucide-react";
+import { NavLink } from "react-router-dom";
+
+const navItems = [
+  { to: "/changes", icon: GitBranch, label: "Changes" },
+  { to: "/kanban", icon: Kanban, label: "Kanban" },
+  { to: "/specs", icon: BookOpen, label: "Specs" },
+];
+
+export default function UtilityBar() {
+  return (
+    <div
+      className="flex h-full w-12 flex-col items-center border-r border-[#464554] bg-[#0b1326] py-2"
+      style={{ width: "var(--spacing-utility-bar, 48px)", minWidth: 48 }}
+    >
+      <div className="mb-4 flex h-10 w-10 items-center justify-center">
+        <Layers size={20} className="text-[#6366f1]" strokeWidth={1.5} />
+      </div>
+
+      <nav className="flex flex-1 flex-col items-center gap-1">
+        {navItems.map(({ to, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            title={label}
+            className={({ isActive }) =>
+              cn(
+                "relative flex h-10 w-10 items-center justify-center rounded transition-colors",
+                isActive
+                  ? "text-[#6366f1]"
+                  : "text-[#908fa0] hover:text-[#c7c4d7]",
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r bg-[#6366f1]" />
+                )}
+                <Icon size={18} strokeWidth={1.5} />
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      <NavLink
+        to="/settings"
+        title="Settings"
+        className="flex h-10 w-10 items-center justify-center rounded text-[#908fa0] transition-colors hover:text-[#c7c4d7]"
+      >
+        <Settings size={18} strokeWidth={1.5} />
+      </NavLink>
+    </div>
+  );
+}
