@@ -1,5 +1,8 @@
 # Specboard
 
+[![Release](https://github.com/cuman14/specboard/actions/workflows/release.yml/badge.svg)](https://github.com/cuman14/specboard/actions/workflows/release.yml)
+[![Commitlint](https://github.com/cuman14/specboard/actions/workflows/commitlint.yml/badge.svg)](https://github.com/cuman14/specboard/actions/workflows/commitlint.yml)
+
 > Desktop GUI for [OpenSpec](https://github.com/openspec) — the Spec-Driven Development (SDD) framework for AI coding assistants.
 
 Specboard gives developers a visual interface to manage OpenSpec changes, specs and artifacts without touching the terminal. Built with **Tauri 2 + React 19 + TypeScript**.
@@ -26,23 +29,61 @@ Specboard gives developers a visual interface to manage OpenSpec changes, specs 
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Desktop shell | Tauri 2 (Rust backend, WebView2 frontend) |
-| UI Framework | React 19 + TypeScript |
-| Styling | Tailwind CSS v4 |
-| Components | shadcn/ui (Radix UI) |
-| State | Zustand |
-| Routing | React Router v7 |
-| Drag & Drop | @dnd-kit |
-| Icons | Lucide React |
-| Markdown | react-markdown |
-| Fonts | Inter + JetBrains Mono |
-| Package manager | pnpm |
+| Layer           | Technology                                |
+| --------------- | ----------------------------------------- |
+| Desktop shell   | Tauri 2 (Rust backend, WebView2 frontend) |
+| UI Framework    | React 19 + TypeScript                     |
+| Styling         | Tailwind CSS v4                           |
+| Components      | shadcn/ui (Radix UI)                      |
+| State           | Zustand                                   |
+| Routing         | React Router v7                           |
+| Drag & Drop     | @dnd-kit                                  |
+| Icons           | Lucide React                              |
+| Markdown        | react-markdown                            |
+| Fonts           | Inter + JetBrains Mono                    |
+| Package manager | pnpm                                      |
 
 ---
 
-## Prerequisites
+## Installation
+
+### Option 1: npm (Recommended for Developers)
+
+```bash
+npm install -g specboard
+specboard
+```
+
+The npm package automatically downloads the correct binary for your platform.
+
+### Option 2: Download from Website
+
+Visit [specboard.dev/download](https://specboard.dev/download) to download the installer for your platform.
+
+### Option 3: GitHub Releases
+
+Download directly from [GitHub Releases](https://github.com/cuman14/specboard/releases) for your platform:
+
+- **macOS**: `.dmg` (Intel & Apple Silicon)
+- **Windows**: `.msi` or `.exe`
+- **Linux**: `.AppImage`, `.deb`, or `.rpm`
+
+### Corporate Proxy / Manual Installation
+
+If `npm install` fails due to network restrictions:
+
+1. Download the appropriate binary from [GitHub Releases](https://github.com/cuman14/specboard/releases)
+2. Set the environment variable before installing:
+   ```bash
+   export SPECBOARD_BINARY_PATH=/path/to/downloaded/specboard
+   npm install -g specboard
+   ```
+
+Or simply run the downloaded binary directly without npm.
+
+---
+
+## Prerequisites (Development)
 
 - [Node.js](https://nodejs.org/) 20+
 - [pnpm](https://pnpm.io/) 8+
@@ -66,6 +107,7 @@ pnpm tauri dev
 ```
 
 > **Windows note:** If `icon.ico` is missing, regenerate it before running:
+>
 > ```powershell
 > powershell -ExecutionPolicy Bypass -File make_icon.ps1
 > ```
@@ -140,16 +182,16 @@ Specboard expects a project with the following layout:
 
 Dark mode only. Key tokens:
 
-| Token | Value |
-|---|---|
-| Background | `#0b1326` |
-| Surface | `#171f33` |
-| Surface high | `#222a3d` |
+| Token            | Value     |
+| ---------------- | --------- |
+| Background       | `#0b1326` |
+| Surface          | `#171f33` |
+| Surface high     | `#222a3d` |
 | Primary (Indigo) | `#6366f1` |
-| Secondary (Sky) | `#0ea5e9` |
-| Text | `#dae2fd` |
-| Text muted | `#c7c4d7` |
-| Border | `#464554` |
+| Secondary (Sky)  | `#0ea5e9` |
+| Text             | `#dae2fd` |
+| Text muted       | `#c7c4d7` |
+| Border           | `#464554` |
 
 See [`DESIGN.md`](./DESIGN.md) for the full reference.
 
