@@ -25,7 +25,7 @@ Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/la
 **Option 2: Scoop**
 
 ```powershell
-scoop bucket add specboard https://github.com/cuman14/specboard/tree/main/scoop
+scoop bucket add specboard https://github.com/cuman14/specboard
 scoop install specboard
 ```
 
