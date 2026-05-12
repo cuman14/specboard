@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/cuman14/specboard/compare/v1.4.1...v1.5.0) (2026-05-12)
+
+
+### Features
+
+* add deployment modernization plan with Changesets and Release-it migration strategy ([306b7a4](https://github.com/cuman14/specboard/commit/306b7a4dd0ef450b370cd78b71d5da8067d17766))
+
 ## [1.4.1](https://github.com/cuman14/specboard/compare/v1.4.0...v1.4.1) (2026-05-12)
 
 
