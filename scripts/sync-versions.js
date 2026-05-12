@@ -76,4 +76,50 @@ fs.writeFileSync(
 );
 console.log(`✓ tauri.conf.json → ${version}`);
 
+// --- Update scoop/specboard.json ---
+const scoopPath = path.join(root, "scoop", "specboard.json");
+
+if (!fs.existsSync(scoopPath)) {
+  console.error(`Error: file not found: ${scoopPath}`);
+  process.exit(1);
+}
+
+const scoopManifest = JSON.parse(fs.readFileSync(scoopPath, "utf8"));
+scoopManifest.version = version;
+scoopManifest.architecture["64bit"].url =
+  `https://github.com/cuman14/specboard/releases/download/v${version}/specboard_${version}_x64-setup.exe`;
+scoopManifest.autoupdate.architecture["64bit"].url =
+  `https://github.com/cuman14/specboard/releases/download/v$version/specboard_$version_x64-setup.exe`;
+fs.writeFileSync(
+  scoopPath,
+  JSON.stringify(scoopManifest, null, 2) + "\n",
+  "utf8",
+);
+console.log(`✓ scoop/specboard.json → ${version}`);
+
+// --- Update homebrew/specboard.rb ---
+const homebrewPath = path.join(root, "homebrew", "specboard.rb");
+
+if (!fs.existsSync(homebrewPath)) {
+  console.error(`Error: file not found: ${homebrewPath}`);
+  process.exit(1);
+}
+
+const homebrewContent = fs.readFileSync(homebrewPath, "utf8");
+const updatedHomebrew = homebrewContent
+  .replace(
+    /url "https:\/\/github\.com\/cuman14\/specboard\/releases\/download\/v[^"]+"/,
+    `url "https://github.com/cuman14/specboard/releases/download/v${version}/specboard_${version}_x64.dmg"`,
+  )
+  .replace(/specboard_[^_]+_x64\.dmg/, `specboard_${version}_x64.dmg`);
+
+if (updatedHomebrew === homebrewContent) {
+  console.warn(
+    `Warning: url line not found or already at ${version} in specboard.rb`,
+  );
+} else {
+  fs.writeFileSync(homebrewPath, updatedHomebrew, "utf8");
+  console.log(`✓ homebrew/specboard.rb → ${version}`);
+}
+
 console.log(`\nAll version files updated to ${version}`);
