@@ -20,12 +20,16 @@ Specboard gives developers a visual interface to manage OpenSpec changes, specs 
 **Option 1: Installer (recommended)**
 Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/latest)
 
+- Note: First-time users may see SmartScreen warning. Click "More info" → "Run anyway"
+
 **Option 2: Scoop**
 
 ```powershell
 scoop bucket add specboard https://github.com/cuman14/specboard/tree/main/scoop
 scoop install specboard
 ```
+
+- Status: Available
 
 ### macOS
 
@@ -39,6 +43,8 @@ brew tap cuman14/specboard
 brew install specboard
 ```
 
+- Status: Available (Formula in repo root)
+
 ### Linux
 
 **Option 1: AppImage (recommended)**
@@ -47,8 +53,11 @@ Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/la
 **Option 2: Flatpak**
 
 ```bash
+# After Flathub approval (see FLATPUB_SETUP.md)
 flatpak install flathub com.specboard.app
 ```
+
+- Status: Pending Flathub approval (see FLATPUB_SETUP.md for steps)
 
 **Option 3: Package Manager**
 
