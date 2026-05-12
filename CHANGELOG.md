@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/cuman14/specboard/compare/v1.4.0...v1.4.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** add push tags trigger to release workflow for automatic execution ([61ea059](https://github.com/cuman14/specboard/commit/61ea059d67d33a0926f78c3dcc3b6e2c253e0516))
+
 # [1.4.0](https://github.com/cuman14/specboard/compare/v1.3.1...v1.4.0) (2026-05-12)
 
 
