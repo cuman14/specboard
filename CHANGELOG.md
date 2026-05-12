@@ -1,3 +1,15 @@
+## [1.3.1](https://github.com/cuman14/specboard/compare/v1.3.0...v1.3.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** trigger release workflow on GitHub Release creation instead of tag push ([db041f8](https://github.com/cuman14/specboard/commit/db041f8898109612aff984ba5645b8414edaf940))
+
+
+### Reverts
+
+* **ci:** remove curl trigger, use native tag push trigger ([dbe260a](https://github.com/cuman14/specboard/commit/dbe260aae88f93dfdf88f902463c9610da4855df))
+
 # [1.3.0](https://github.com/cuman14/specboard/compare/v1.2.0...v1.3.0) (2026-05-12)
 
 
