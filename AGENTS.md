@@ -208,6 +208,29 @@ See `DESIGN.md` for full reference. Quick summary:
 
 ---
 
+## Deployment & Versioning
+
+See `DEPLOYMENT_MODERNIZATION.md` for full reference on the recommended modernization plan.
+
+**Current stack:**
+
+- **Semantic Release** - Automated versioning based on conventional commits
+- **Commitlint** - Enforces conventional commit format
+- **GitHub Actions** - Build workflows for Windows/Mac/Linux
+- **Custom scripts** - `sync-versions.js`, `update-sha256.js`
+- **Package managers** - Scoop, Homebrew, Flatpak
+
+**Recommended modernization:**
+
+- Replace Semantic Release with **Changesets** for better change tracking
+- Use **Release-it** for simplified release management
+- Unify CI workflows (single workflow instead of two)
+- Automate package manager submissions via GitHub Actions
+
+**Note:** When modifying deployment/versioning infrastructure, always consult `DEPLOYMENT_MODERNIZATION.md` first for the technical specification and migration plan.
+
+---
+
 ## Fase 1 Scope (MVP)
 
 **In scope:**
