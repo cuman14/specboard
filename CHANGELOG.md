@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/cuman14/specboard/compare/v1.5.0...v1.6.0) (2026-05-12)
+
+
+### Features
+
+* **ci:** trigger release workflow automatically after semantic-release ([23b280e](https://github.com/cuman14/specboard/commit/23b280ee7c3999da92939a450ac7fec99d3278ba))
+
 # [1.5.0](https://github.com/cuman14/specboard/compare/v1.4.1...v1.5.0) (2026-05-12)
 
 
