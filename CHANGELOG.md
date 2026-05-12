@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/cuman14/specboard/compare/v1.1.1...v1.2.0) (2026-05-12)
+
+
+### Features
+
+* **ci:** publish releases automatically without draft mode ([68739c4](https://github.com/cuman14/specboard/commit/68739c4411c520dcc2e5e292561e2ec416d7cfa3))
+
 ## [1.1.1](https://github.com/cuman14/specboard/compare/v1.1.0...v1.1.1) (2026-05-12)
 
 
