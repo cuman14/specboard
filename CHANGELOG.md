@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/cuman14/specboard/compare/v1.0.0...v1.1.0) (2026-05-12)
+
+
+### Features
+
+* **ci:** add implementation notes to automated releases change ([a01b69a](https://github.com/cuman14/specboard/commit/a01b69aed37c1d54994b02ca317fc00c784804ab))
+
 # 1.0.0 (2026-05-12)
 
 
