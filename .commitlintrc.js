@@ -1,31 +1,31 @@
-module.exports = {
-  extends: ['@commitlint/config-conventional'],
+export default {
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [
+    "type-enum": [
       2,
-      'always',
+      "always",
       [
-        'feat',
-        'fix',
-        'docs',
-        'style',
-        'refactor',
-        'perf',
-        'test',
-        'chore',
-        'ci',
-        'build',
-        'revert'
-      ]
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "ci",
+        "build",
+        "revert",
+      ],
     ],
-    'scope-enum': [
+    "scope-enum": [
       1,
-      'always',
-      ['ui', 'core', 'ci', 'docs', 'api', 'store', 'tauri']
+      "always",
+      ["ui", "core", "ci", "docs", "api", "store", "tauri"],
     ],
-    'subject-case': [2, 'never', ['start-case', 'pascal-case', 'upper-case']],
-    'subject-empty': [2, 'never'],
-    'type-empty': [2, 'never'],
-    'header-max-length': [2, 'always', 100]
-  }
+    "subject-case": [2, "never", ["start-case", "pascal-case", "upper-case"]],
+    "subject-empty": [2, "never"],
+    "type-empty": [2, "never"],
+    "header-max-length": [2, "always", 100],
+  },
 };
