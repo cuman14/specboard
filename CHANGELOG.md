@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/cuman14/specboard/compare/v1.2.0...v1.3.0) (2026-05-12)
+
+
+### Features
+
+* **ci:** auto-trigger release workflow after semantic-release creates tag ([63ef431](https://github.com/cuman14/specboard/commit/63ef431bde4941863f8d68c2ce449a0e76406e5a))
+
 # [1.2.0](https://github.com/cuman14/specboard/compare/v1.1.1...v1.2.0) (2026-05-12)
 
 
