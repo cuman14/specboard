@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/cuman14/specboard/compare/v1.1.0...v1.1.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** use pnpm with --ignore-scripts in release workflow ([34bc0af](https://github.com/cuman14/specboard/commit/34bc0afe661f7733ee381d7d76e500d008d36dde))
+
 # [1.1.0](https://github.com/cuman14/specboard/compare/v1.0.0...v1.1.0) (2026-05-12)
 
 
