@@ -1,3 +1,17 @@
+# [1.4.0](https://github.com/cuman14/specboard/compare/v1.3.1...v1.4.0) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** ensure semantic-release commits to main branch and tracks package manifest changes ([a08fba7](https://github.com/cuman14/specboard/commit/a08fba7e98a8f571ea1e6c08abd6b816c42dd2b5))
+
+
+### Features
+
+* **ci:** add automated SHA256 hash updates for package manifests after release ([fd3c2bc](https://github.com/cuman14/specboard/commit/fd3c2bcbb97e9e151f1220d9f93c07b6cb814333))
+* **pkg:** add Scoop, Homebrew, and Flatpak package configurations ([76ae49b](https://github.com/cuman14/specboard/commit/76ae49b096905bb3eff795a2180653cdd6f1f52f))
+* **pkg:** create Homebrew tap with Formula structure ([cb8e35b](https://github.com/cuman14/specboard/commit/cb8e35bfaf5b9f2da608238eea1b7d2132fd0a15))
+
 ## [1.3.1](https://github.com/cuman14/specboard/compare/v1.3.0...v1.3.1) (2026-05-12)
 
 
