@@ -30,6 +30,9 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Configure pnpm to allow build scripts
+        run: pnpm config set enable-pre-post-scripts true
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
