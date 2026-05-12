@@ -31,10 +31,8 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        env:
-          # Allow build scripts to run
-          COREPACK_ENABLE_STRICT: 0
-        run: pnpm install --frozen-lockfile
+        # Ignore build scripts to avoid esbuild issues
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Run semantic-release
         env:
