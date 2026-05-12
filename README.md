@@ -13,6 +13,57 @@ Specboard gives developers a visual interface to manage OpenSpec changes, specs 
 
 ---
 
+## Installation
+
+### Windows
+
+**Option 1: Installer (recommended)**
+Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/latest)
+
+**Option 2: Scoop**
+
+```powershell
+scoop bucket add https://github.com/cuman14/specboard
+scoop install specboard
+```
+
+### macOS
+
+**Option 1: DMG (recommended)**
+Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/latest)
+
+**Option 2: Homebrew**
+
+```bash
+brew tap cuman14/specboard
+brew install specboard
+```
+
+### Linux
+
+**Option 1: AppImage (recommended)**
+Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/latest)
+
+**Option 2: Flatpak**
+
+```bash
+flatpak install flathub com.specboard.app
+```
+
+**Option 3: Package Manager**
+
+```bash
+# Debian/Ubuntu
+wget https://github.com/cuman14/specboard/releases/download/v1.1.0/specboard_1.1.0_amd64.deb
+sudo dpkg -i specboard_1.1.0_amd64.deb
+
+# Fedora/RHEL
+wget https://github.com/cuman14/specboard/releases/download/v1.1.0/specboard_1.1.0_x86_64.rpm
+sudo dnf install specboard_1.1.0_x86_64.rpm
+```
+
+---
+
 ## Screenshots
 
 > _Changes Dashboard, Kanban Board, Specs Explorer and Change Detail with Tasks view._
