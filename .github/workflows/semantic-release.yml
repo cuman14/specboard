@@ -39,17 +39,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
-
-      - name: Trigger release workflow
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Get the latest tag
-          TAG=$(git describe --tags --abbrev=0)
-          if [ -n "$TAG" ]; then
-            echo "Triggering release workflow for tag $TAG"
-            gh workflow run release.yml -f tag=$TAG
-          else
-            echo "No tag found, skipping release workflow trigger"
-          fi

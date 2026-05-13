@@ -6,11 +6,6 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag to release (e.g. v1.2.3)"
-        required: true
 
 jobs:
   release:
@@ -75,12 +70,7 @@ jobs:
 
       - name: extract version from tag
         id: get_version
-        run: |
-          if [ -n "${{ inputs.tag }}" ]; then
-            echo "version=${{ inputs.tag }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-          fi
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: update SHA256 hashes
         run: node scripts/update-sha256.js ${{ steps.get_version.version }}
