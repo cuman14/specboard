@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.5](https://github.com/cuman14/specboard/compare/v0.1.4...v0.1.5) (2026-05-13)
+
+## [0.2.0](https://github.com/cuman14/specboard/compare/v0.1.4...v0.2.0) (2026-05-13)
+
 ## [0.1.4](https://github.com/cuman14/specboard/compare/v0.1.3...v0.1.4) (2026-05-13)
 
 ### ⚡ Performance
