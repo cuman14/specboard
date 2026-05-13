@@ -45,7 +45,7 @@ jobs:
 
       - name: Version and release
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: pnpm release-it
 
