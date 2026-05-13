@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.6](https://github.com/cuman14/specboard/compare/v0.1.4...v0.1.6) (2026-05-13)
+
+### 🐛 Bug Fixes
+
+* ensure on main branch before running release-it ([9808950](https://github.com/cuman14/specboard/commit/98089502cfcafaa40579539cef73d32d0ad21243))
+
 ## [0.1.5](https://github.com/cuman14/specboard/compare/v0.1.4...v0.1.5) (2026-05-13)
 
 ## [0.2.0](https://github.com/cuman14/specboard/compare/v0.1.4...v0.2.0) (2026-05-13)
