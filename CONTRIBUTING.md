@@ -75,10 +75,10 @@ git commit -m "ci: fix caching strategy in release workflow"
 
 ## Automated Release Process
 
-When you push changesets to `main`, the following happens automatically:
+When you push commits to `main`, the following happens automatically:
 
-1. **release-it** analyzes changesets in `.changeset/` directory
-2. If a changeset is found:
+1. **release-it** analyzes conventional commits since the last tag
+2. If a releasable commit is found (`feat:`, `fix:`, etc.):
    - Version is bumped in `package.json`, `Cargo.toml`, `tauri.conf.json`
    - `CHANGELOG.md` is updated
    - A Git tag (`v*`) is created and pushed
@@ -101,14 +101,6 @@ pnpm tauri dev
 # Make your changes
 git add .
 git commit -m "feat(ui): add new kanban filter"
-
-# Create a changeset for release
-pnpm changeset
-# Select version bump type (major/minor/patch) and add description
-
-# Commit the changeset
-git add .changeset/*.md
-git commit -m "chore: add changeset"
 
 # Push triggers the automated release pipeline if applicable
 git push origin main

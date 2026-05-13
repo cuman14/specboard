@@ -4,9 +4,9 @@ This document describes how releases are automatically created and published for
 
 ## Automated Release Workflow
 
-Specboard uses **Changesets + Release-it** with GitHub Actions to automatically:
+Specboard uses **Release-it** with GitHub Actions to automatically:
 
-- Analyze changesets for version bump type
+- Analyze conventional commits for version bump type
 - Determine the next semantic version (major/minor/patch)
 - Bump version in all required files
 - Generate CHANGELOG.md
@@ -38,26 +38,18 @@ Before the first release, you must set up a Personal Access Token (PAT):
 
 ### Creating a Release
 
-**No manual steps required** — just push conventional commits to `main` with a changeset:
+**No manual steps required** — just push conventional commits to `main`:
 
 ```bash
 # Make your changes
 git add .
 git commit -m "feat: add new feature"
 
-# Create a changeset
-pnpm changeset
-# Select version bump type (major/minor/patch) and add description
-
-# Commit the changeset
-git add .changeset/*.md
-git commit -m "chore: add changeset"
-
 # Push to main
 git push origin main
 
 # That's it! The rest happens automatically:
-# 1. Release-it analyzes changesets and bumps version
+# 1. Release-it analyzes conventional commits and bumps version
 # 2. Version updated in package.json, Cargo.toml, tauri.conf.json
 # 3. CHANGELOG.md generated
 # 4. Git tag created (e.g., v1.2.3)
@@ -78,11 +70,16 @@ git push origin main
 
 ### Breaking Changes
 
-To trigger a major version bump, select `major` when creating a changeset:
+To trigger a major version bump, use `!` after the type or add a `BREAKING CHANGE:` footer:
 
 ```bash
-pnpm changeset
-# Select "major" when prompted for version bump type
+git commit -m "feat!: remove deprecated workspace API"
+
+# OR
+
+git commit -m "feat: redesign workspace API
+
+BREAKING CHANGE: workspace.path is now required"
 ```
 
 ### Manual Release (Emergency)
@@ -115,8 +112,8 @@ pnpm release-it --dry-run
 
 ### For Automated Releases (Normal Workflow)
 
-- [ ] Changeset created with `pnpm changeset`
-- [ ] Changeset committed and pushed to `main`
+- [ ] Commit message follows conventional format (`feat:`, `fix:`, etc.)
+- [ ] Changes pushed to `main`
 - [ ] Release-it workflow completed successfully
 - [ ] Git tag created automatically (`v*`)
 - [ ] Release workflow triggered and completed
