@@ -195,4 +195,4 @@ jobs:
           git add scoop/specboard.json homebrew/specboard.rb
           # Solo commitea si hay cambios reales
           git diff --staged --quiet || git commit -m "chore: update SHA256 hashes for ${{ needs.release.outputs.tag }} [skip ci]"
-          git push origin HEAD:main
+          git push
