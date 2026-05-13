@@ -57,6 +57,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/cuman14/specboard.git
 
+      - name: Ensure on main branch
+        run: |
+          git checkout main
+          git pull origin main
+
       - name: Run release-it
         id: release
         env:
@@ -257,4 +262,3 @@ jobs:
           git diff --staged --quiet || \
             git commit -m "chore: update SHA256 hashes for ${{ github.ref_name }} [skip ci]"
           git push origin main
-
