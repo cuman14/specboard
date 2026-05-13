@@ -23,6 +23,7 @@ jobs:
           ref: main
           # Use a token with write access so semantic-release can push tags
           token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - uses: actions/setup-node@v4
         with:
