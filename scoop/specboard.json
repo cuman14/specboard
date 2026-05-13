@@ -6,7 +6,7 @@
   "architecture": {
     "64bit": {
       "url": "https://github.com/cuman14/specboard/releases/download/v0.1.2/specboard_0.1.2_x64-setup.exe",
-      "hash": "REPLACE_WITH_SHA256"
+      "hash": "78b33bf458491f2af6640141c763ff279bc320c6b72aea7e2e402901a2e42af8"
     }
   },
   "installer": {
