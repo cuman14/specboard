@@ -1,13 +1,12 @@
 # Specboard
 
 [![Release](https://github.com/cuman14/specboard/actions/workflows/release.yml/badge.svg)](https://github.com/cuman14/specboard/actions/workflows/release.yml)
-[![Commitlint](https://github.com/cuman14/specboard/actions/workflows/commitlint.yml/badge.svg)](https://github.com/cuman14/specboard/actions/workflows/commitlint.yml)
 
 > Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants
 
-[![Commitlint](https://img.shields.io/badge/commitlint-conventional-green.svg)](https://github.com/conventional-changelog/commitlint)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-**Status**: Automated releases with semantic-release and conventional commits are now active.
+**Status**: Automated releases with release-it and conventional commits are now active.
 
 Specboard gives developers a visual interface to manage OpenSpec changes, specs and artifacts without touching the terminal. Built with **Tauri 2 + React 19 + TypeScript**.
 

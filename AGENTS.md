@@ -252,6 +252,8 @@ The workflow has three jobs:
 - Update manifests commit uses `[skip ci]` to prevent release loop
 - Release job uses `RELEASE_TOKEN` secret for git operations
 - Build job uses `GITHUB_TOKEN` for GitHub Release assets
+- Git push uses simple format without refspec to avoid push failures
+- Use HEAD:main reference instead of bare main for git operations
 
 **Note:** When modifying deployment/versioning infrastructure, always consult AGENTS.md first for the current workflow rules.
 
