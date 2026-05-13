@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.4](https://github.com/cuman14/specboard/compare/v0.1.3...v0.1.4) (2026-05-13)
+
+### ⚡ Performance
+
+* refactor release workflow to support multi-arch builds and conditional execution ([977c48a](https://github.com/cuman14/specboard/commit/977c48aefb09a6b6e53684216324f8fcca8923dc))
+
+### 📝 Documentation
+
+* update AGENTS.md and README.md with git push improvements and release tooling changes ([9dcdc9b](https://github.com/cuman14/specboard/commit/9dcdc9b2e049dacfaa811563fae0f9efcfe24eb2))
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
