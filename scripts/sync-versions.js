@@ -6,35 +6,32 @@
  * Synchronizes the version number across all required files:
  *   - src-tauri/Cargo.toml
  *   - src-tauri/tauri.conf.json
+ *   - scoop/specboard.json
+ *   - homebrew/specboard.rb
  *
- * package.json is handled automatically by semantic-release.
- *
- * Usage: node scripts/sync-versions.js <version>
- * Example: node scripts/sync-versions.js 1.2.3
+ * Version is read from package.json.
  */
 
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const version = process.argv[2];
-
-if (!version) {
-  console.error("Error: version argument is required");
-  console.error("Usage: node scripts/sync-versions.js <version>");
-  process.exit(1);
-}
-
-if (!/^\d+\.\d+\.\d+/.test(version)) {
-  console.error(
-    `Error: invalid version format "${version}". Expected semver (e.g. 1.2.3)`,
-  );
-  process.exit(1);
-}
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..");
+
+// Read version from package.json
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(root, "package.json"), "utf8"),
+);
+const version = packageJson.version;
+
+if (!/^\d+\.\d+\.\d+/.test(version)) {
+  console.error(
+    `Error: invalid version format "${version}" in package.json. Expected semver (e.g. 1.2.3)`,
+  );
+  process.exit(1);
+}
 
 // --- Update Cargo.toml ---
 const cargoPath = path.join(root, "src-tauri", "Cargo.toml");
