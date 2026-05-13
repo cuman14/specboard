@@ -12,8 +12,7 @@
     "release": true,
     "releaseName": "Specboard v${version}",
     "autoGenerate": true,
-    "assets": ["dist/*.exe", "dist/*.dmg", "dist/*.AppImage", "dist/*.deb"],
-    "tokenRef": "RELEASE_TOKEN"
+    "assets": ["dist/*.exe", "dist/*.dmg", "dist/*.AppImage", "dist/*.deb"]
   },
   "plugins": {
     "@release-it-plugins/lerna-changelog": {
