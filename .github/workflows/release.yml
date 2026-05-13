@@ -75,7 +75,12 @@ jobs:
 
       - name: extract version from tag
         id: get_version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            echo "version=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          fi
 
       - name: update SHA256 hashes
         run: node scripts/update-sha256.js ${{ steps.get_version.version }}
