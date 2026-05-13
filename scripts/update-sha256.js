@@ -3,17 +3,17 @@
 /**
  * update-sha256.js
  *
- * Lee los hashes SHA256 desde los artifacts generados por CI
+ * Lee los SHA256 desde los artifacts generados por CI
  * y actualiza scoop/specboard.json y homebrew/specboard.rb.
  *
- * Uso (en CI, después de descargar los artifacts):
+ * Uso (en CI, tras descargar los artifacts con actions/download-artifact):
  *   node scripts/update-sha256.js --from-artifacts <directorio>
  *
- * El directorio debe contener subcarpetas sha256-windows,
- * sha256-macos y sha256-linux, cada una con un archivo sha256.env
- * con el formato:
- *   file=specboard_1.2.3_x64-setup.exe
- *   hash=abc123...
+ * Estructura esperada en <directorio>:
+ *   sha256-windows/sha256.env  →  file=specboard_x.y.z_x64-setup.exe  +  hash=...
+ *   sha256-macos-x64/sha256.env  →  file=specboard_x.y.z_x64.dmg      +  hash=...
+ *   sha256-macos-arm/sha256.env  →  file=specboard_x.y.z_aarch64.dmg  +  hash=...
+ *   sha256-linux/sha256.env    →  file=specboard_x.y.z_amd64.AppImage +  hash=...
  */
 
 import fs from "fs";
@@ -48,11 +48,12 @@ function readEnvFile(filePath) {
   return result;
 }
 
-// ── Cargar los tres artifacts ───────────────────────────────────
+// ── Cargar los artifacts de cada plataforma ─────────────────────
 const platforms = {
-  windows: path.join(artifactsDir, "sha256-windows", "sha256.env"),
-  macos:   path.join(artifactsDir, "sha256-macos",   "sha256.env"),
-  linux:   path.join(artifactsDir, "sha256-linux",   "sha256.env"),
+  windows:   path.join(artifactsDir, "sha256-windows",   "sha256.env"),
+  macosX64:  path.join(artifactsDir, "sha256-macos-x64", "sha256.env"),
+  macosArm:  path.join(artifactsDir, "sha256-macos-arm", "sha256.env"),
+  linux:     path.join(artifactsDir, "sha256-linux",     "sha256.env"),
 };
 
 const hashes = {};
@@ -68,9 +69,7 @@ for (const [platform, envPath] of Object.entries(platforms)) {
 // ── Actualizar scoop/specboard.json ─────────────────────────────
 const scoopPath = path.join(root, "scoop", "specboard.json");
 const scoop = JSON.parse(fs.readFileSync(scoopPath, "utf8"));
-
 scoop.architecture["64bit"].hash = hashes.windows.hash;
-
 fs.writeFileSync(scoopPath, JSON.stringify(scoop, null, 2) + "\n", "utf8");
 console.log(`✓ scoop/specboard.json actualizado`);
 
@@ -78,13 +77,18 @@ console.log(`✓ scoop/specboard.json actualizado`);
 const homebrewPath = path.join(root, "homebrew", "specboard.rb");
 let homebrew = fs.readFileSync(homebrewPath, "utf8");
 
-// Reemplaza cualquier sha256 existente (tanto REPLACE_WITH_SHA256 como un hash previo)
+// arm64
 homebrew = homebrew.replace(
-  /sha256 "[^"]+"/,
-  `sha256 "${hashes.macos.hash}"`,
+  /sha256 "REPLACE_WITH_SHA256_ARM"/,
+  `sha256 "${hashes.macosArm.hash}"`,
+);
+// x64 — reemplaza tanto REPLACE_WITH_SHA256_X64 como hashes previos en el bloque on_intel
+homebrew = homebrew.replace(
+  /(on_intel do[\s\S]*?sha256 ")[^"]+(")/,
+  `$1${hashes.macosX64.hash}$2`,
 );
 
 fs.writeFileSync(homebrewPath, homebrew, "utf8");
-console.log(`✓ homebrew/specboard.rb actualizado`);
+console.log(`✓ homebrew/specboard.rb actualizado (arm64 + x64)`);
 
 console.log("\n✅ SHA256 hashes actualizados correctamente");

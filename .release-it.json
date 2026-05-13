@@ -1,9 +1,10 @@
 {
   "git": {
     "commitMessage": "chore(release): v${version}",
-    "tagMatch": "v${version}",
     "tagName": "v${version}",
-    "pushRepo": "origin"
+    "pushRepo": "origin",
+    "requireBranch": "main",
+    "requireCleanWorkingDir": false
   },
   "npm": {
     "publish": false
@@ -11,18 +12,30 @@
   "github": {
     "release": true,
     "releaseName": "Specboard v${version}",
-    "autoGenerate": true,
-    "assets": ["dist/*.exe", "dist/*.dmg", "dist/*.AppImage", "dist/*.deb"],
+    "autoGenerate": false,
     "tokenRef": "RELEASE_TOKEN"
   },
   "plugins": {
     "@release-it/conventional-changelog": {
-      "preset": "angular",
-      "infile": "CHANGELOG.md",
-      "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          { "type": "feat",     "section": "✨ New Features" },
+          { "type": "fix",      "section": "🐛 Bug Fixes" },
+          { "type": "perf",     "section": "⚡ Performance" },
+          { "type": "refactor", "section": "♻️ Refactor" },
+          { "type": "docs",     "section": "📝 Documentation" },
+          { "type": "build",    "section": "🏗️ Build" },
+          { "type": "ci",       "section": "🤖 CI" },
+          { "type": "chore",    "hidden": true },
+          { "type": "style",    "hidden": true },
+          { "type": "test",     "hidden": true }
+        ]
+      },
+      "infile": "CHANGELOG.md"
     }
   },
   "hooks": {
-    "before:bump": ["node scripts/sync-versions.js"]
+    "before:bump": "node scripts/sync-versions.js"
   }
 }

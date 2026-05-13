@@ -106,21 +106,26 @@ if (!fs.existsSync(homebrewPath)) {
   process.exit(1);
 }
 
-const homebrewContent = fs.readFileSync(homebrewPath, "utf8");
-const updatedHomebrew = homebrewContent
-  .replace(
-    /url "https:\/\/github\.com\/cuman14\/specboard\/releases\/download\/v[^"]+"/,
-    `url "https://github.com/cuman14/specboard/releases/download/v${version}/specboard_${version}_x64.dmg"`,
-  )
-  .replace(/specboard_[^_]+_x64\.dmg/, `specboard_${version}_x64.dmg`);
+let homebrewContent = fs.readFileSync(homebrewPath, "utf8");
 
-if (updatedHomebrew === homebrewContent) {
-  console.warn(
-    `Warning: url line not found or already at ${version} in specboard.rb`,
-  );
-} else {
-  fs.writeFileSync(homebrewPath, updatedHomebrew, "utf8");
-  console.log(`✓ homebrew/specboard.rb → ${version}`);
-}
+// Actualizar version
+homebrewContent = homebrewContent.replace(
+  /version "[^"]+"/,
+  `version "${version}"`,
+);
+
+// Actualizar URLs arm64 e x64
+homebrewContent = homebrewContent.replace(
+  /specboard_[^"]+_aarch64\.dmg/g,
+  `specboard_${version}_aarch64.dmg`,
+);
+homebrewContent = homebrewContent.replace(
+  /specboard_[^"]+_x64\.dmg/g,
+  `specboard_${version}_x64.dmg`,
+);
+
+fs.writeFileSync(homebrewPath, homebrewContent, "utf8");
+console.log(`✓ homebrew/specboard.rb → ${version}`);
 
 console.log(`\nAll version files updated to ${version}`);
+
