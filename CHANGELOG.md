@@ -1,3 +1,31 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.1](https://github.com/cuman14/specboard/compare/v1.6.0...v0.1.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* add persist-credentials to checkout for git push ([c572c45](https://github.com/cuman14/specboard/commit/c572c45bd7a9466c0a9b6288aa69e0a274240d29))
+* add repository field to package.json ([3cc774d](https://github.com/cuman14/specboard/commit/3cc774d7520030d9fc2600e2a0320a6a57fd0461))
+* configure git credentials for semantic-release push ([6f9450d](https://github.com/cuman14/specboard/commit/6f9450d1dfcedd35cb5c2f971b62c24c54182b33))
+* downgrade release-it to v19 for plugin compatibility ([767edac](https://github.com/cuman14/specboard/commit/767edacdf021895ecf36fd4c5bd4e768ac9c3cba))
+* read version from package.json in scripts ([bb56449](https://github.com/cuman14/specboard/commit/bb56449d8b04f29f17be5901fb548a7bb7548c0b))
+* remove manual workflow triggers, use automatic tag triggers ([6c029b8](https://github.com/cuman14/specboard/commit/6c029b81fc214e69011b105388480f94c278e371))
+* remove requireBranch check from release-it config ([ba24354](https://github.com/cuman14/specboard/commit/ba2435449d093a02c8f1470898d5581a77cde94a))
+* remove tokenRef from release-it config ([ab07ce1](https://github.com/cuman14/specboard/commit/ab07ce1fbdf7330604c65944959c632ab0692b41))
+* simplify version extraction in release workflow ([4ea57bc](https://github.com/cuman14/specboard/commit/4ea57bc9e63c9617265be453caa47ab548cab87f))
+* use RELEASE_TOKEN for release-it GitHub auth ([24dba35](https://github.com/cuman14/specboard/commit/24dba35883c7b1842aef57c3ca7bffa6e4fbdba2))
+* use workflow_dispatch tag input for version extraction ([c2838f6](https://github.com/cuman14/specboard/commit/c2838f670c5d3c961da9493b5064e4b220fd9e2c))
+
+
+### Reverts
+
+* remove changesets from release workflow ([4604300](https://github.com/cuman14/specboard/commit/46043005b4f91625385505cb859d9a080feb7a39))
+
 # [1.6.0](https://github.com/cuman14/specboard/compare/v1.5.0...v1.6.0) (2026-05-12)
 
 

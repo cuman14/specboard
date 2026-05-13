@@ -1,16 +1,16 @@
 {
-  "version": "1.6.0",
+  "version": "0.1.0",
   "description": "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants",
   "homepage": "https://github.com/cuman14/specboard",
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/cuman14/specboard/releases/download/v1.6.0/specboard_1.6.0_x64-setup.exe",
+      "url": "https://github.com/cuman14/specboard/releases/download/v0.1.0/specboard_0.1.0_x64-setup.exe",
       "hash": "REPLACE_WITH_SHA256"
     }
   },
   "installer": {
-    "script": "Start-Process \"$dir\\specboard_1.1.0_x64-setup.exe\" -ArgumentList '/S' -Wait"
+    "script": "specboard_0.1.0_x64-setup.exe"
   },
   "uninstaller": {
     "script": "Start-Process \"$env:LOCALAPPDATA\\Programs\\specboard\\Uninstall Specboard.exe\" -ArgumentList '/S' -Wait"
@@ -21,7 +21,7 @@
   "autoupdate": {
     "architecture": {
       "64bit": {
-        "url": "https://github.com/cuman14/specboard/releases/download/v$version/specboard_$version_x64-setup.exe"
+        "url": "https://github.com/cuman14/specboard/releases/download/v0.1.0/specboard_0.1.0_x64-setup.exe"
       }
     },
     "hash": {
