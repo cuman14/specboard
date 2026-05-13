@@ -1,14 +1,56 @@
 name: Release
 
 on:
-  release:
-    types: [created]
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 1.2.3)"
+        required: true
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   release:
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      !startsWith(github.event.head_commit.message, 'chore(release)')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/cuman14/specboard.git
+
+      - name: Version and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: pnpm release-it
+
+  build:
+    needs: release
     permissions:
       contents: write
     strategy:
@@ -24,6 +66,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -42,19 +86,30 @@ jobs:
       - name: install frontend dependencies
         run: npm install -g pnpm && pnpm install --frozen-lockfile --ignore-scripts
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "Specboard ${{ github.ref_name }}"
-          releaseBody: "See the assets to download and install this version."
+          releaseBody: "See the CHANGELOG.md for details."
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
 
+      - name: Calculate SHA256
+        run: |
+          sha256sum dist/* > dist/sha256sum.txt
+
+      - name: Upload SHA256
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha256-${{ matrix.platform }}
+          path: dist/sha256sum.txt
+
   update-sha256:
-    needs: release
+    needs: [release, build]
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -63,22 +118,22 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: setup node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: extract version from tag
-        id: get_version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Download SHA256 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: sha256-artifacts
 
-      - name: update SHA256 hashes
-        run: node scripts/update-sha256.js ${{ steps.get_version.version }}
+      - name: Update manifests with SHA256
+        run: node scripts/update-sha256-from-artifacts.js sha256-artifacts
 
-      - name: commit and push changes
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add scoop/specboard.json homebrew/specboard.rb
-          git commit -m "chore: update SHA256 hashes for v${{ steps.get_version.version }}"
+          git commit -m "chore: update SHA256 hashes for ${{ github.ref_name }}"
           git push origin main

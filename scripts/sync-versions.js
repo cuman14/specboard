@@ -89,7 +89,11 @@ scoopManifest.version = version;
 scoopManifest.architecture["64bit"].url =
   `https://github.com/cuman14/specboard/releases/download/v${version}/specboard_${version}_x64-setup.exe`;
 scoopManifest.autoupdate.architecture["64bit"].url =
-  `https://github.com/cuman14/specboard/releases/download/v$version/specboard_$version_x64-setup.exe`;
+  `https://github.com/cuman14/specboard/releases/download/v${version}/specboard_${version}_x64-setup.exe`;
+// Fix hardcoded installer script
+if (scoopManifest.installer && scoopManifest.installer.script) {
+  scoopManifest.installer.script = `specboard_${version}_x64-setup.exe`;
+}
 fs.writeFileSync(
   scoopPath,
   JSON.stringify(scoopManifest, null, 2) + "\n",

@@ -4,38 +4,67 @@ This document describes how releases are automatically created and published for
 
 ## Automated Release Workflow
 
-Specboard uses **semantic-release** with GitHub Actions to automatically:
+Specboard uses **Changesets + Release-it** with GitHub Actions to automatically:
 
-- Analyze conventional commits on every push to `main`
+- Analyze changesets for version bump type
 - Determine the next semantic version (major/minor/patch)
 - Bump version in all required files
 - Generate CHANGELOG.md
 - Create and push Git tags
 - Trigger Tauri builds for all platforms
 - Create GitHub Releases with installers
+- Update package manifests with SHA256 hashes
+
+## Prerequisites
+
+Before the first release, you must set up a Personal Access Token (PAT):
+
+1. Go to GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens
+2. Click "Generate new token"
+3. Name it `specboard-release-token`
+4. Resource owner: Select `cuman14`
+5. Repository access: Select `Only select repositories` → Choose `specboard`
+6. Permissions:
+   - ✅ **Contents**: Read and Write
+   - ✅ **Pull requests**: Read and Write
+   - ✅ **Workflows**: Read and Write
+7. Set expiration (recommend 90 days or 1 year)
+8. Click "Generate token" and copy it
+9. Go to `https://github.com/cuman14/specboard/settings/secrets/actions`
+10. Click "New repository secret"
+11. Name: `RELEASE_TOKEN`
+12. Value: [paste the PAT]
+13. Click "Add secret"
 
 ### Creating a Release
 
-**No manual steps required** — just push conventional commits to `main`:
+**No manual steps required** — just push conventional commits to `main` with a changeset:
 
 ```bash
 # Make your changes
 git add .
 git commit -m "feat: add new feature"
-# OR
-git commit -m "fix: resolve critical bug"
+
+# Create a changeset
+pnpm changeset
+# Select version bump type (major/minor/patch) and add description
+
+# Commit the changeset
+git add .changeset/*.md
+git commit -m "chore: add changeset"
 
 # Push to main
 git push origin main
 
 # That's it! The rest happens automatically:
-# 1. commitlint validates the commit format
-# 2. semantic-release analyzes commits and bumps version
-# 3. Version updated in package.json, Cargo.toml, tauri.conf.json
-# 4. CHANGELOG.md generated
-# 5. Git tag created (e.g., v1.2.3)
-# 6. Release workflow triggered → builds installers
-# 7. GitHub Release created with all artifacts
+# 1. Release-it analyzes changesets and bumps version
+# 2. Version updated in package.json, Cargo.toml, tauri.conf.json
+# 3. CHANGELOG.md generated
+# 4. Git tag created (e.g., v1.2.3)
+# 5. Release workflow triggered → builds installers
+# 6. SHA256 calculated during build
+# 7. Package manifests updated with SHA256
+# 8. GitHub Release created with all artifacts
 ```
 
 ### Version Bump Rules
@@ -49,16 +78,11 @@ git push origin main
 
 ### Breaking Changes
 
-To trigger a major version bump, use `!` after the type or add a `BREAKING CHANGE:` footer:
+To trigger a major version bump, select `major` when creating a changeset:
 
 ```bash
-git commit -m "feat!: remove deprecated workspace API"
-
-# OR
-
-git commit -m "feat: redesign workspace API
-
-BREAKING CHANGE: workspace.path is now required"
+pnpm changeset
+# Select "major" when prompted for version bump type
 ```
 
 ### Manual Release (Emergency)
@@ -81,20 +105,19 @@ git push origin v1.2.3
 
 ### Dry Run
 
-Preview what version semantic-release would create before pushing:
+Preview what version release-it would create before pushing:
 
 ```bash
-npx semantic-release --dry-run
+pnpm release-it --dry-run
 ```
 
 ## Release Checklist
 
 ### For Automated Releases (Normal Workflow)
 
-- [ ] Commit message follows conventional format (`feat:`, `fix:`, etc.)
-- [ ] Commitlint check passes on PR
-- [ ] Changes pushed to `main`
-- [ ] Semantic-release workflow completed successfully
+- [ ] Changeset created with `pnpm changeset`
+- [ ] Changeset committed and pushed to `main`
+- [ ] Release-it workflow completed successfully
 - [ ] Git tag created automatically (`v*`)
 - [ ] Release workflow triggered and completed
 - [ ] All platform artifacts present in GitHub Release:
@@ -103,6 +126,7 @@ npx semantic-release --dry-run
   - [ ] macOS: `.dmg`, `.app`
 - [ ] CHANGELOG.md updated automatically
 - [ ] GitHub Release published (not draft)
+- [ ] Package manifests (scoop, homebrew) updated with SHA256
 - [ ] npm package published (if applicable)
 - [ ] Download page deployed (if applicable)
 

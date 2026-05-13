@@ -1,0 +1,51 @@
+{
+  "git": {
+    "commitMessage": "chore(release): v${version}",
+    "tagMatch": "v${version}",
+    "tagName": "v${version}",
+    "pushRepo": "origin"
+  },
+  "npm": {
+    "publish": false
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Specboard v${version}",
+    "autoGenerate": true,
+    "assets": [
+      "dist/*.exe",
+      "dist/*.dmg",
+      "dist/*.AppImage",
+      "dist/*.deb"
+    ],
+    "tokenRef": "RELEASE_TOKEN"
+  },
+  "plugins": {
+    "@release-it-plugins/lerna-changelog": {
+      "repoUrl": "https://github.com/cuman14/specboard",
+      "labels": {
+        "feat": ":sparkles: New Features",
+        "fix": ":bug: Bug Fixes",
+        "docs": ":memo: Documentation",
+        "style": ":art: Styles",
+        "refactor": ":hammer: Refactor",
+        "perf": ":zap: Performance",
+        "test": ":white_check_mark: Tests",
+        "chore": ":wrench: Chore",
+        "ci": ":robot: CI",
+        "build": ":construction: Build"
+      }
+    }
+  },
+  "hooks": {
+    "before:init": [
+      "node scripts/sync-versions.js ${version}"
+    ],
+    "after:release": [
+      "node scripts/update-sha256-from-artifacts.js ${version}",
+      "git add scoop/specboard.json homebrew/specboard.rb",
+      "git commit -m \"chore: update SHA256 hashes for v${version}\"",
+      "git push"
+    ]
+  }
+}

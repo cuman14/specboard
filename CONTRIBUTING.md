@@ -16,19 +16,19 @@ Every commit message must follow this format:
 
 ### Types
 
-| Type | Triggers | Description |
-|------|----------|-------------|
-| `feat` | **minor** bump | A new feature |
-| `fix` | **patch** bump | A bug fix |
-| `perf` | **patch** bump | A performance improvement |
-| `revert` | **patch** bump | Reverts a previous commit |
-| `docs` | no release | Documentation only changes |
-| `style` | no release | Code style changes (formatting, etc.) |
-| `refactor` | no release | Code change that neither fixes a bug nor adds a feature |
-| `test` | no release | Adding or updating tests |
-| `chore` | no release | Maintenance tasks, dependency updates |
-| `ci` | no release | CI/CD configuration changes |
-| `build` | no release | Build system changes |
+| Type       | Triggers       | Description                                             |
+| ---------- | -------------- | ------------------------------------------------------- |
+| `feat`     | **minor** bump | A new feature                                           |
+| `fix`      | **patch** bump | A bug fix                                               |
+| `perf`     | **patch** bump | A performance improvement                               |
+| `revert`   | **patch** bump | Reverts a previous commit                               |
+| `docs`     | no release     | Documentation only changes                              |
+| `style`    | no release     | Code style changes (formatting, etc.)                   |
+| `refactor` | no release     | Code change that neither fixes a bug nor adds a feature |
+| `test`     | no release     | Adding or updating tests                                |
+| `chore`    | no release     | Maintenance tasks, dependency updates                   |
+| `ci`       | no release     | CI/CD configuration changes                             |
+| `build`    | no release     | Build system changes                                    |
 
 ### Scopes (optional)
 
@@ -75,16 +75,17 @@ git commit -m "ci: fix caching strategy in release workflow"
 
 ## Automated Release Process
 
-When you push commits to `main`, the following happens automatically:
+When you push changesets to `main`, the following happens automatically:
 
-1. **commitlint** validates the commit message format
-2. **semantic-release** analyzes commits since the last tag
-3. If a releasable commit is found (`feat:`, `fix:`, etc.):
+1. **release-it** analyzes changesets in `.changeset/` directory
+2. If a changeset is found:
    - Version is bumped in `package.json`, `Cargo.toml`, `tauri.conf.json`
    - `CHANGELOG.md` is updated
    - A Git tag (`v*`) is created and pushed
-4. The **release workflow** triggers and builds installers for all platforms
-5. A GitHub Release is created with the installers attached
+3. The **release workflow** triggers and builds installers for all platforms
+4. SHA256 hashes are calculated during build
+5. Package manifests (scoop, homebrew) are updated with SHA256
+6. A GitHub Release is created with the installers attached
 
 ## Development Workflow
 
@@ -97,9 +98,17 @@ pnpm install
 # Run in development mode
 pnpm tauri dev
 
-# Before committing, write a conventional commit message
+# Make your changes
 git add .
 git commit -m "feat(ui): add new kanban filter"
+
+# Create a changeset for release
+pnpm changeset
+# Select version bump type (major/minor/patch) and add description
+
+# Commit the changeset
+git add .changeset/*.md
+git commit -m "chore: add changeset"
 
 # Push triggers the automated release pipeline if applicable
 git push origin main
@@ -107,10 +116,10 @@ git push origin main
 
 ## Dry Run
 
-You can preview what version semantic-release would create before pushing:
+You can preview what version release-it would create before pushing:
 
 ```bash
-npx semantic-release --dry-run
+pnpm release-it --dry-run
 ```
 
 ## Manual Release (Emergency)
