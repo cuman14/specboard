@@ -210,24 +210,50 @@ See `DESIGN.md` for full reference. Quick summary:
 
 ## Deployment & Versioning
 
-See `DEPLOYMENT_MODERNIZATION.md` for full reference on the recommended modernization plan.
-
 **Current stack:**
 
-- **Semantic Release** - Automated versioning based on conventional commits
-- **Commitlint** - Enforces conventional commit format
-- **GitHub Actions** - Build workflows for Windows/Mac/Linux
-- **Custom scripts** - `sync-versions.js`, `update-sha256.js`
+- **Release-it** - Automated versioning based on conventional commits
+- **@release-it/conventional-changelog** - Changelog generation from conventional commits
+- **GitHub Actions** - Unified release workflow with three jobs
+- **Custom scripts** - `sync-versions.js`, `update-sha256-from-artifacts.js`
 - **Package managers** - Scoop, Homebrew, Flatpak
 
-**Recommended modernization:**
+**Release Workflow (.github/workflows/release.yml):**
 
-- Replace Semantic Release with **Changesets** for better change tracking
-- Use **Release-it** for simplified release management
-- Unify CI workflows (single workflow instead of two)
-- Automate package manager submissions via GitHub Actions
+The workflow has three jobs:
 
-**Note:** When modifying deployment/versioning infrastructure, always consult `DEPLOYMENT_MODERNIZATION.md` first for the technical specification and migration plan.
+1. **Job 1 - release (Version & tag):**
+   - Runs only if commit is NOT from release bot (`chore(release)`)
+   - release-it analyzes commits since last tag
+   - Bumps version in package.json, Cargo.toml, tauri.conf.json
+   - Updates CHANGELOG.md
+   - Creates git tag and publishes GitHub Release (empty)
+   - Outputs: `tag` and `released` flags
+
+2. **Job 2 - build (Build binaries):**
+   - Depends on release job (only runs if released=true)
+   - Matrix of 3 runners: Windows, macOS, Linux
+   - Each runner checks out the exact tag (not main)
+   - Builds Tauri app with tauri-action
+   - Calculates SHA256 of installer
+   - Uploads SHA256 as artifact (`sha256.env` format)
+
+3. **Job 3 - update-manifests (Update SHA256 in manifests):**
+   - Depends on both release and build jobs
+   - Downloads SHA256 artifacts from all platforms
+   - Runs `update-sha256-from-artifacts.js` to update scoop/specboard.json and homebrew/specboard.rb
+   - Commits and pushes changes with `[skip ci]` to prevent infinite loop
+
+**Important rules:**
+
+- Use `@release-it/conventional-changelog` NOT `@release-it-plugins/lerna-changelog`
+- Scripts read version from package.json (no command line arguments)
+- SHA256 calculated from CI artifacts (not downloaded from internet)
+- Update manifests commit uses `[skip ci]` to prevent release loop
+- Release job uses `RELEASE_TOKEN` secret for git operations
+- Build job uses `GITHUB_TOKEN` for GitHub Release assets
+
+**Note:** When modifying deployment/versioning infrastructure, always consult AGENTS.md first for the current workflow rules.
 
 ---
 

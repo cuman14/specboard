@@ -48,7 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@release-it-plugins/lerna-changelog": "^8.0.1",
+    "@release-it/conventional-changelog": "^11.0.0",
     "@tailwindcss/vite": "^4.1.6",
     "@tauri-apps/cli": "^2.3.1",
     "@types/react": "^19.1.2",

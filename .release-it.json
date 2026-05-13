@@ -3,7 +3,9 @@
     "commitMessage": "chore(release): v${version}",
     "tagMatch": "v${version}",
     "tagName": "v${version}",
-    "pushRepo": "origin"
+    "pushRepo": "origin",
+    "requireBranch": "main",
+    "requireCleanWorkingDir": false
   },
   "npm": {
     "publish": false
@@ -16,29 +18,13 @@
     "tokenRef": "RELEASE_TOKEN"
   },
   "plugins": {
-    "@release-it-plugins/lerna-changelog": {
-      "repoUrl": "https://github.com/cuman14/specboard",
-      "labels": {
-        "feat": ":sparkles: New Features",
-        "fix": ":bug: Bug Fixes",
-        "docs": ":memo: Documentation",
-        "style": ":art: Styles",
-        "refactor": ":hammer: Refactor",
-        "perf": ":zap: Performance",
-        "test": ":white_check_mark: Tests",
-        "chore": ":wrench: Chore",
-        "ci": ":robot: CI",
-        "build": ":construction: Build"
-      }
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md",
+      "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
     }
   },
   "hooks": {
-    "before:init": ["node scripts/sync-versions.js"],
-    "after:release": [
-      "node scripts/update-sha256-from-artifacts.js sha256-artifacts",
-      "git add scoop/specboard.json homebrew/specboard.rb",
-      "git commit -m \"chore: update SHA256 hashes for v${version}\"",
-      "git push"
-    ]
+    "before:bump": ["node scripts/sync-versions.js"]
   }
 }
