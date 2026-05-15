@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layers, FolderOpen, Clock, ArrowRight } from "lucide-react";
+import { Layers, FolderOpen, Clock, ArrowRight, Sparkles } from "lucide-react";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { useChangesStore } from "@/store/changes.store";
 import { isTauri, openFolderDialog } from "@/lib/tauri-commands";
+import { MOCK_WORKSPACE, MOCK_CHANGES } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,6 +42,21 @@ export default function OnboardingPage() {
       await setWorkspace(path);
       await loadChanges(path);
       addRecentWorkspace(path);
+      navigate("/changes");
+    } catch (err) {
+      setError(String(err));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function openDemo() {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await setWorkspace(MOCK_WORKSPACE.path);
+      useWorkspaceStore.setState({ recentWorkspaces: [MOCK_WORKSPACE.path] });
+      useChangesStore.setState({ changes: MOCK_CHANGES });
       navigate("/changes");
     } catch (err) {
       setError(String(err));
@@ -122,6 +138,17 @@ export default function OnboardingPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Demo mode */}
+        <Button
+          variant="ghost"
+          onClick={openDemo}
+          disabled={isLoading}
+          className="w-full gap-2 text-text-subtle hover:text-text hover:bg-surface-high"
+        >
+          <Sparkles size={16} strokeWidth={1.5} />
+          Try demo mode
+        </Button>
 
         {/* Recent workspaces */}
         {recentWorkspaces.length > 0 && (

@@ -155,7 +155,7 @@ export default function ChangeDetail() {
                 <TabsTrigger
                   key={artifact.name}
                   value={artifact.name}
-                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground rounded-none px-4 py-2.5 text-sm font-medium gap-1.5 cursor-pointer active:translate-y-0.5 transition-transform"
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-primary data-[state=active]:text-foreground border-b-2 border-transparent rounded-none px-4 py-2.5 text-sm font-medium gap-1.5 cursor-pointer active:translate-y-0.5 transition-all"
                 >
                   <Icon size={14} strokeWidth={1.5} />
                   <span className="capitalize">{artifact.name}</span>
