@@ -1,12 +1,5 @@
 name: Release
 
-# ─────────────────────────────────────────────────────────────────
-# TRIGGER
-#   · push a main → job "release" decide si hay commits relevantes
-#     y crea el tag. Si no los hay, el workflow termina aquí.
-#   · push de tag v* → job "build" arranca directamente.
-#     Esto evita compilar en cada commit a main.
-# ─────────────────────────────────────────────────────────────────
 on:
   push:
     branches:
@@ -18,12 +11,10 @@ on:
 jobs:
   # ───────────────────────────────────────────────────────────────
   # JOB 1 — release
-  #   Corre SOLO en push a main (no en tags, no en commits del bot).
-  #   release-it analiza los commits desde el último tag:
-  #     · Si hay feat/fix/perf → bump de versión, CHANGELOG,
-  #       tag y GitHub Release vacío (sin binarios aún).
-  #     · Si no hay commits relevantes → sale limpio, released=false,
-  #       el workflow termina sin lanzar builds.
+  #   Corre SOLO en push a main, filtrando commits del propio bot.
+  #   release-it analiza commits desde el último tag:
+  #     · feat/fix/perf → bump versión, CHANGELOG, tag, GitHub Release vacío.
+  #     · Sin commits relevantes → released=false, workflow termina.
   # ───────────────────────────────────────────────────────────────
   release:
     name: Version & tag
@@ -35,9 +26,10 @@ jobs:
     outputs:
       released: ${{ steps.release.outputs.released }}
     steps:
-      - name: Checkout (historial completo para que release-it lea todos los tags)
+      - name: Checkout rama main con historial completo
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TOKEN }}
 
@@ -51,26 +43,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: Configure git identity y remote con token
+      - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/cuman14/specboard.git
-
-      - name: Ensure on main branch
-        run: |
           git checkout main
-          git pull origin main
 
       - name: Run release-it
         id: release
         env:
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
-          # --ci desactiva prompts. Capturamos el exit code:
-          #   0 = release publicado
-          #   1 = error real
-          #   EXIT_CODE distinto y mensaje "No commits" = nada que publicar
           set +e
           OUTPUT=$(pnpm release-it --ci 2>&1)
           EXIT_CODE=$?
@@ -79,7 +63,7 @@ jobs:
 
           if echo "$OUTPUT" | grep -q "No commits since the last release"; then
             echo "released=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No hay commits relevantes — se omite el release"
+            echo "ℹ️  Sin commits relevantes — se omite el release"
           elif [ $EXIT_CODE -ne 0 ]; then
             echo "released=false" >> $GITHUB_OUTPUT
             echo "❌ release-it falló con código $EXIT_CODE"
@@ -90,16 +74,11 @@ jobs:
 
   # ───────────────────────────────────────────────────────────────
   # JOB 2 — build
-  #   Corre cuando:
-  #     a) Se hace push de un tag v* directamente, O
-  #     b) El job release acaba de crear uno (released=true).
-  #   Matrix de 3 runners en paralelo.
-  #   Cada runner:
-  #     1. Compila el binario nativo con tauri-action.
-  #     2. Calcula el SHA256 del instalador.
-  #     3. Sube el SHA256 como artifact para el job siguiente.
-  #   Cache de Rust y pnpm para reducir tiempo de compilación
-  #   de ~20 min a ~5-8 min en builds sucesivos.
+  #   Corre cuando released=true (push a main) o push de tag v*.
+  #   3 runners en paralelo: Windows, macOS ARM, Linux.
+  #   macos-13 (Intel) eliminado: cola de horas en plan gratuito.
+  #   Cada runner: compila → calcula SHA256 → sube artifact.
+  #   Cache Rust + pnpm: primera build lenta, siguientes ~5-8 min.
   # ───────────────────────────────────────────────────────────────
   build:
     name: Build (${{ matrix.platform }})
@@ -120,13 +99,6 @@ jobs:
             installer-glob: "src-tauri/target/release/bundle/nsis/*.exe"
             rust-cache-key: windows
 
-          # macOS Intel (x86_64) — runner macos-13
-          - platform: macos-13
-            artifact-name: sha256-macos-x64
-            installer-glob: "src-tauri/target/release/bundle/dmg/*.dmg"
-            rust-cache-key: macos-x64
-
-          # macOS Apple Silicon (arm64) — runner macos-latest (macos-14+)
           - platform: macos-latest
             artifact-name: sha256-macos-arm
             installer-glob: "src-tauri/target/release/bundle/dmg/*.dmg"
@@ -152,8 +124,6 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      # Cache de Cargo: reutiliza dependencias compiladas entre runs.
-      # Primera vez sin efecto; a partir de la segunda ahorra ~12-15 min.
       - name: Cache Rust (Cargo)
         uses: swatinem/rust-cache@v2
         with:
@@ -173,7 +143,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # Cache de pnpm store: evita re-descargar paquetes npm entre runs.
       - name: Cache pnpm store
         uses: actions/cache@v4
         with:
@@ -184,8 +153,6 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # tauri-action compila el binario y sube los instaladores
-      # al GitHub Release que release-it ya creó en el job anterior.
       - name: Build y publicar binarios en GitHub Release
         uses: tauri-apps/tauri-action@v0
         env:
@@ -197,16 +164,14 @@ jobs:
           releaseDraft: false
           prerelease: false
 
-      # sha256sum en Windows no existe por defecto; usamos certutil como fallback.
       - name: Calcular SHA256 del instalador
         shell: bash
         run: |
           FILE=$(ls ${{ matrix.installer-glob }} 2>/dev/null | head -1)
           if [ -z "$FILE" ]; then
-            echo "ERROR: no se encontró instalador con patrón ${{ matrix.installer-glob }}"
+            echo "ERROR: instalador no encontrado con patrón ${{ matrix.installer-glob }}"
             exit 1
           fi
-          # sha256sum disponible en Linux/macOS/Git-bash (Windows runners lo incluyen)
           HASH=$(sha256sum "$FILE" | awk '{print $1}')
           FILENAME=$(basename "$FILE")
           echo "file=$FILENAME" > sha256.env
@@ -222,11 +187,9 @@ jobs:
 
   # ───────────────────────────────────────────────────────────────
   # JOB 3 — update-manifests
-  #   Corre cuando los 3 builds han terminado correctamente.
-  #   Descarga los 3 artifacts SHA256, actualiza
-  #   scoop/specboard.json y homebrew/specboard.rb con los hashes
-  #   reales, y commitea los cambios a main con [skip ci] para
-  #   que no se vuelva a disparar el workflow.
+  #   Espera a que los 3 builds terminen correctamente.
+  #   Descarga los artifacts SHA256, actualiza scoop y homebrew,
+  #   commitea con [skip ci] para no disparar otro workflow.
   # ───────────────────────────────────────────────────────────────
   update-manifests:
     name: Update SHA256 in manifests
@@ -246,12 +209,12 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Descargar los 3 artifacts SHA256
+      - name: Descargar los artifacts SHA256
         uses: actions/download-artifact@v4
         with:
           path: sha256-artifacts
 
-      - name: Actualizar scoop y homebrew con los SHA256 reales
+      - name: Actualizar scoop y homebrew con SHA256 reales
         run: node scripts/update-sha256.js --from-artifacts sha256-artifacts
 
       - name: Commit y push (solo si hay cambios)
@@ -262,6 +225,3 @@ jobs:
           git diff --staged --quiet || \
             git commit -m "chore: update SHA256 hashes for ${{ github.ref_name }} [skip ci]"
           git push origin main
-
-
-
