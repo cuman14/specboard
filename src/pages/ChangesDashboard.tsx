@@ -207,7 +207,7 @@ export default function ChangesDashboard() {
         {/* Main content */}
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Stats row */}
-          <div className="grid grid-cols-4 gap-px border-b border-border bg-border">
+          <div className="grid grid-cols-4 gap-px border-b border-[#464554] bg-[#464554]">
             {[
               {
                 label: "Active",
@@ -236,7 +236,7 @@ export default function ChangesDashboard() {
             ].map(({ label, value, icon: Icon, color }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 bg-card px-4 py-3"
+                className="flex items-center gap-3 bg-[#171f33] px-4 py-3"
               >
                 <Icon size={18} className={color} strokeWidth={1.5} />
                 <div>
