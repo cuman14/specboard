@@ -31,3 +31,18 @@ The project SHALL install and configure `tailwindcss-animate` to support shadcn 
 #### Scenario: Animation utilities are available
 - **WHEN** a shadcn component with animation classes is rendered
 - **THEN** animation utilities like `animate-in`, `fade-in`, and `slide-in` work correctly
+
+### Requirement: No hardcoded hex colors in components
+All component styles SHALL use Tailwind CSS utility classes that reference design tokens defined in `src/index.css`. Hardcoded hex values (e.g., `bg-[#0b1326]`, `text-[#908fa0]`, `border-[#464554]`) are NOT permitted in any component file.
+
+#### Scenario: Component uses theme tokens
+- **WHEN** OnboardingPage renders
+- **THEN** all colors use Tailwind classes like `bg-bg`, `bg-surface`, `text-text`, `text-text-subtle`, `border-border`
+
+#### Scenario: No hardcoded hex values exist
+- **WHEN** scanning all `.tsx` files in `src/components/` and `src/pages/`
+- **THEN** no `#[0-9a-fA-F]{6}` patterns appear in className strings
+
+#### Scenario: AGENTS.md documents the rule
+- **WHEN** AGENTS.md is read
+- **THEN** a "No hardcoded hex colors in components" section exists with the complete color token reference table

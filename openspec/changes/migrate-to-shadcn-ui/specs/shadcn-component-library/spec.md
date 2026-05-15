@@ -51,9 +51,15 @@ The system SHALL provide `Tabs`, `TabsList`, `TabsTrigger`, and `TabsContent` co
 - **WHEN** a Tabs component with two triggers is rendered and the first is selected
 - **THEN** the first trigger shows active styling and its corresponding content is visible
 
-#### Scenario: Tab switching works
+#### Scenario: Tab switching works without layout shift
 - **WHEN** user clicks the second tab trigger
-- **THEN** the second tab becomes active and its content replaces the first
+- **THEN** the second tab becomes active and its content replaces the first WITHOUT any vertical movement or visual jump
+
+#### Scenario: Tab indicator uses transparent border to prevent layout shift
+- **WHEN** a TabsTrigger renders in inactive state
+- **THEN** it has `border-b-2 border-transparent` reserving space
+- **WHEN** a TabsTrigger becomes active
+- **THEN** the border color changes to `border-primary` WITHOUT changing dimensions
 
 ### Requirement: Input component
 The system SHALL provide an `Input` component in `src/components/ui/input.tsx` that wraps a standard HTML input element with shadcn styling. The component MUST support all standard input attributes and display focus ring with indigo (#6366f1) color.
@@ -120,6 +126,7 @@ All page components SHALL replace inline Tailwind patterns with the correspondin
 #### Scenario: OnboardingPage uses Button and Input
 - **WHEN** OnboardingPage renders
 - **THEN** the browse button uses `<Button>`, the path input uses `<Input>`, and the main container uses `<Card>`
+- **AND** a "Try demo mode" ghost button appears below the card
 
 #### Scenario: ChangesDashboard uses Badge and Progress
 - **WHEN** ChangesDashboard renders
@@ -136,3 +143,33 @@ All page components SHALL replace inline Tailwind patterns with the correspondin
 #### Scenario: SpecsExplorer uses Collapsible
 - **WHEN** SpecsExplorer renders
 - **THEN** folder tree nodes use `<Collapsible>` for expand/collapse
+
+### Requirement: Demo mode on OnboardingPage
+The OnboardingPage SHALL provide a "Try demo mode" ghost button below the main card that loads realistic mock data from actual OpenSpec changes. The button MUST use the shadcn `Button` component with `variant="ghost"` and display a Sparkles icon. When clicked, it SHALL populate the workspace and changes stores with mock data and navigate to the changes dashboard.
+
+#### Scenario: Demo mode button renders
+- **WHEN** OnboardingPage renders
+- **THEN** a ghost button with "Try demo mode" label and Sparkles icon appears below the main card
+
+#### Scenario: Demo mode loads realistic data
+- **WHEN** user clicks "Try demo mode"
+- **THEN** workspace store is set with mock workspace path and changes store is populated with at least 2 changes with real artifact content
+
+#### Scenario: Demo mode navigates to dashboard
+- **WHEN** demo mode loads successfully
+- **THEN** the user is navigated to `/changes` route
+
+### Requirement: Realistic mock data from actual OpenSpec
+The mock data in `src/lib/mock-data.ts` SHALL reflect real OpenSpec changes from the project's `openspec/` directory. Mock changes MUST include actual artifact content from proposal.md, specs.md, design.md, and tasks.md files. The spec tree MUST match the actual `openspec/specs/` folder structure.
+
+#### Scenario: Mock changes reflect real project
+- **WHEN** mock data is inspected
+- **THEN** it includes `automated-releases-with-conventional-commits` and `migrate-to-shadcn-ui` changes
+
+#### Scenario: Mock artifact content is realistic
+- **WHEN** `MOCK_ARTIFACT_CONTENT` is read
+- **THEN** it contains actual markdown content from real proposal, specs, design, and tasks files
+
+#### Scenario: Mock spec tree matches openspec/specs/
+- **WHEN** `MOCK_SPEC_TREE` is inspected
+- **THEN** it includes architecture, download-page, features, github-actions-release, and npm-binary-wrapper directories
