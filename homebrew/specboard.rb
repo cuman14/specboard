@@ -3,7 +3,7 @@
 class Specboard < Formula
   desc "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants"
   homepage "https://github.com/cuman14/specboard"
-  version "0.3.1"
+  version "0.3.2"
 
   # Apple Silicon (arm64) — M1/M2/M3/M4
   # Intel: no disponible por limitaciones del runner de CI.

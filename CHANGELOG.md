@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2](https://github.com/cuman14/specboard/compare/v0.3.1...v0.3.2) (2026-05-15)
+
+### 🐛 Bug Fixes
+
+* clarify Specboard supports any framework spec, not just OpenSpec ([ab77558](https://github.com/cuman14/specboard/commit/ab7755860e67db6796951e83b26456303600350b))
+
 ## [0.3.1](https://github.com/cuman14/specboard/compare/v0.3.0...v0.3.1) (2026-05-15)
 
 ### 🐛 Bug Fixes
