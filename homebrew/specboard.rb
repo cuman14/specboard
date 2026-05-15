@@ -3,12 +3,12 @@
 class Specboard < Formula
   desc "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants"
   homepage "https://github.com/cuman14/specboard"
-  version "0.1.6"
+  version "0.2.0"
 
   # Apple Silicon (arm64) — M1/M2/M3/M4
   # Intel: no disponible por limitaciones del runner de CI.
   on_arm do
-    url "https://github.com/cuman14/specboard/releases/download/v0.1.1/specboard_0.1.6_aarch64.dmg"
+    url "https://github.com/cuman14/specboard/releases/download/v0.1.1/specboard_0.2.0_aarch64.dmg"
     sha256 "REPLACE_WITH_SHA256_ARM"
   end
 
