@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/cuman14/specboard/compare/v0.1.6...v0.2.0) (2026-05-15)
+
+### ✨ New Features
+
+* add skills-lock.json and update gitignore for agent directories ([8918b15](https://github.com/cuman14/specboard/commit/8918b1521d5473b3e69473bd864e2a5b224551e8))
+* add trailing newlines to release workflow and update scripts and remove deploy mac13 ([46d2c42](https://github.com/cuman14/specboard/commit/46d2c421d6a607864d3baedff72eabfc8b644779))
+
+### 🐛 Bug Fixes
+
+* remove requireBranch check handled by workflow condition ([3d7bd24](https://github.com/cuman14/specboard/commit/3d7bd24944e5cb69cab42cc7bd8468c5ed0bec68))
+* remove requireBranch from release-it config and normalize spacing ([47fd558](https://github.com/cuman14/specboard/commit/47fd55842113d1277f79e4539da6ba2d590eea10))
+* use contains instead of startsWith for commit message filtering ([ec196e8](https://github.com/cuman14/specboard/commit/ec196e851135bf6afb20b03e9d89dc8f3a3e2ce2))
+
 ## [0.1.6](https://github.com/cuman14/specboard/compare/v0.1.4...v0.1.6) (2026-05-13)
 
 ### 🐛 Bug Fixes
