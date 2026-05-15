@@ -5,8 +5,8 @@
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/cuman14/specboard/releases/download/v0.3.2/specboard_0.3.2_x64-setup.exe",
-      "hash": "d790da30f99e51bec7c9c82ccda5796e0278601851b0a3e14190c054c2dc4b13"
+      "url": "https://github.com/cuman14/specboard/releases/download/v0.3.2/Specboard_0.3.2_x64-setup.exe",
+      "hash": "c452e3a93534dd942abdb14c96098ef2a85933e9f0ba704fa0b4378771c22509"
     }
   },
   "uninstaller": {
