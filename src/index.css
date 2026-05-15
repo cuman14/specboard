@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwindcss-animate";
 
 @theme {
   --color-bg: #0b1326;
@@ -33,25 +34,25 @@
 }
 
 :root {
-  --background: 222 47% 10%;
-  --foreground: 225 80% 91%;
-  --card: 222 42% 14%;
-  --card-foreground: 225 80% 91%;
-  --popover: 222 42% 14%;
-  --popover-foreground: 225 80% 91%;
-  --primary: 239 84% 67%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 199 89% 48%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 222 28% 22%;
-  --muted-foreground: 240 10% 73%;
-  --accent: 222 28% 22%;
-  --accent-foreground: 225 80% 91%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 247 16% 30%;
-  --input: 247 16% 30%;
-  --ring: 239 84% 67%;
+  --background: #0b1326;
+  --foreground: #dae2fd;
+  --card: #171f33;
+  --card-foreground: #dae2fd;
+  --popover: #171f33;
+  --popover-foreground: #dae2fd;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #222a3d;
+  --secondary-foreground: #dae2fd;
+  --muted: #222a3d;
+  --muted-foreground: #908fa0;
+  --accent: #222a3d;
+  --accent-foreground: #dae2fd;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #464554;
+  --input: #464554;
+  --ring: #6366f1;
   --radius: 0.25rem;
 }
 
