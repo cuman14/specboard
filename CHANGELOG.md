@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.3](https://github.com/cuman14/specboard/compare/v0.3.2...v0.3.3) (2026-05-15)
+
+### 🤖 CI
+
+* fix tag propagation from release job to build and update-sha256 jobs ([cbdfeed](https://github.com/cuman14/specboard/commit/cbdfeeda1e2d77c841002d1e4276837fba0da9ac))
+
 ## [0.3.2](https://github.com/cuman14/specboard/compare/v0.3.1...v0.3.2) (2026-05-15)
 
 ### 🐛 Bug Fixes

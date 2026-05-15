@@ -1,6 +1,6 @@
 [package]
 name = "specboard"
-version = "0.3.2"
+version = "0.3.3"
 description = "Specboard - Visual GUI for OpenSpec"
 authors = ["you"]
 license = ""
