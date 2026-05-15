@@ -134,11 +134,11 @@ export default function ChangeDetail() {
           </span>
           <Progress value={total > 0 ? (completed / total) * 100 : 0} className="h-1.5 w-20" />
 
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="active:scale-95 transition-transform">
             <CheckCircle2 size={13} strokeWidth={1.5} />
             Validate
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="active:scale-95 transition-transform">
             <Archive size={13} strokeWidth={1.5} />
             Archive
           </Button>
@@ -155,7 +155,7 @@ export default function ChangeDetail() {
                 <TabsTrigger
                   key={artifact.name}
                   value={artifact.name}
-                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground rounded-none px-4 py-2.5 text-sm font-medium gap-1.5"
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground rounded-none px-4 py-2.5 text-sm font-medium gap-1.5 cursor-pointer active:translate-y-0.5 transition-transform"
                 >
                   <Icon size={14} strokeWidth={1.5} />
                   <span className="capitalize">{artifact.name}</span>

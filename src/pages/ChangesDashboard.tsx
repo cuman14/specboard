@@ -181,24 +181,24 @@ export default function ChangesDashboard() {
             variant="outline"
             size="sm"
             title="Sync workspace"
-            className="shadow-none bg-transparent"
+            className="active:scale-95 transition-transform"
           >
             <RefreshCw
               size={13}
               strokeWidth={1.5}
-              className={isLoading ? "animate-spin" : ""}
+              className={isLoading ? "animate-spin" : "transition-transform active:rotate-180"}
             />
           </Button>
           <Button
             onClick={handleChangeWorkspace}
             variant="outline"
             size="sm"
-            className="shadow-none bg-transparent"
+            className="active:scale-95 transition-transform"
           >
             <FolderOpen size={14} strokeWidth={1.5} />
             Change workspace
           </Button>
-          <Button size="sm">
+          <Button size="sm" className="active:scale-95 transition-transform">
             <Plus size={14} strokeWidth={1.5} />
             New change
           </Button>
