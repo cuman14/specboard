@@ -254,6 +254,34 @@ The workflow has three jobs:
 - Build job uses `GITHUB_TOKEN` for GitHub Release assets
 - Git push uses simple format without refspec to avoid push failures
 - Use HEAD:main reference instead of bare main for git operations
+- `pnpm release-it --ci` works without a package.json script entry — pnpm v9+ falls back to `pnpm exec` when no matching script is found
+- tauri-action does NOT set `releaseBody` — release-it's generated changelog must be preserved in GitHub Releases
+- pnpm is pinned to `@9` in CI (not `@latest`) to avoid breaking changes
+- Linux build runner uses `ubuntu-24.04` (not `ubuntu-22.04`)
+- Homebrew SHA256/URL updates in `update-sha256.js` target the `on_arm` block specifically (not first match)
+- `pnpm-workspace.yaml` MUST include `packages` field (required by pnpm)
+- `scripts/deploy/` is the single location for all deployment-related scripts
+
+**pnpm security (.npmrc):**
+
+- `node-linker=isolated` — packages can only access explicitly declared dependencies
+- `strict-peer-dependencies=true` — fail on unmet peer dependencies
+- `prefer-frozen-lockfile=true` — prevent silent lockfile modifications
+- `save-exact=true` — pin exact versions (no `^` or `~`)
+- `side-effects-cache=false` — disable side-effects cache to prevent cache poisoning
+- CI runs `pnpm audit --prod --audit-level=moderate` on every release
+
+**Release pipeline decisions:**
+
+| Decision | Reason |
+|----------|--------|
+| No `releaseBody` in tauri-action | Preserves release-it's full changelog in GitHub Releases |
+| `ubuntu-24.04` over `ubuntu-22.04` | LTS 2022 is aging; 2024 is current |
+| pnpm pinned to `@9` | Prevents unexpected breaking changes from latest |
+| Homebrew regex scoped to `on_arm` | Prevents matching wrong `sha256` entries if bottle block is added |
+| `scripts/deploy/` consolidation | All deploy scripts in one place; no dead code at root |
+| `pnpm audit` in CI | Catches known vulnerabilities before release |
+| No `minimumReleaseAge` equivalent | pnpm has no native property for this; supply chain age checks require external tooling |
 
 **Note:** When modifying deployment/versioning infrastructure, always consult AGENTS.md first for the current workflow rules.
 
@@ -285,6 +313,16 @@ The workflow has three jobs:
 ## Known Issues & Rules
 
 > **Always follow these rules to avoid regressions.**
+
+### No scripts when functionality already exists
+
+Before creating a new script, check if pnpm, Node.js, or an existing tool already provides the needed functionality. Examples:
+
+- **Don't create** a script to check dependency age — pnpm has no native `minimumReleaseAge` property, but `pnpm audit` covers vulnerability scanning
+- **Don't create** a script to list files — use `ls`, `Get-ChildItem`, or `glob` patterns
+- **Don't create** a script to run a CLI tool — use `pnpm exec <tool>` directly
+
+If unsure whether to create a script, **ask first**. The goal is to avoid accumulating dead or redundant scripts like `update-sha256-from-artifacts.js` (which was created but never used).
 
 ### Icon `icon.ico` is required for Windows builds
 
