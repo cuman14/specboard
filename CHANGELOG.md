@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1](https://github.com/cuman14/specboard/compare/v0.3.0...v0.3.1) (2026-05-15)
+
+### 🐛 Bug Fixes
+
+* use after:bump hook, fix update-sha256 artifacts, fix exe glob ([1a9f93a](https://github.com/cuman14/specboard/commit/1a9f93a8f9a25ada26a591c0d3c00cbf290a8510))
+
 ## [0.3.0](https://github.com/cuman14/specboard/compare/v0.1.6...v0.3.0) (2026-05-15)
 
 ### ✨ New Features
