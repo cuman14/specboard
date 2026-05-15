@@ -344,6 +344,33 @@ The script creates a valid 32x32 indigo ICO using .NET `System.Drawing`.
 - `SpecsExplorer.tsx` must NOT fall back to `MOCK_SPEC_TREE` — show empty state instead
 - `ChangesDashboard.tsx` and `KanbanPage.tsx` must load from real workspace via Tauri IPC
 
+### No hardcoded hex colors in components
+
+All colors MUST use Tailwind CSS utility classes that reference the design tokens defined in `src/index.css`. Never hardcode hex values like `bg-[#0b1326]` or `text-[#908fa0]`.
+
+**Available color tokens** (defined in `@theme` block):
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `bg` / `background` | `#0b1326` | Page background |
+| `surface` / `card` | `#171f33` | Card/surface backgrounds |
+| `surface-high` / `accent` | `#222a3d` | Elevated surfaces, active states |
+| `surface-highest` | `#2d3449` | Highest elevation |
+| `primary` | `#6366f1` | Primary actions, links |
+| `primary-dim` | `#4f46e5` | Primary hover |
+| `secondary` | `#0ea5e9` | Secondary actions |
+| `text` / `foreground` | `#dae2fd` | Primary text |
+| `text-muted` / `muted-foreground` | `#908fa0` | Secondary text, labels |
+| `text-subtle` | `#c7c4d7` | Tertiary text |
+| `border` | `#464554` | Borders, dividers |
+| `border-subtle` | `#2d3449` | Subtle borders |
+| `success` | `#22c55e` | Success states |
+| `warning` | `#f59e0b` | Warning states |
+| `error` / `destructive` | `#ef4444` | Error states |
+
+**Correct**: `bg-surface text-text border-border`
+**Incorrect**: `bg-[#171f33] text-[#dae2fd] border-[#464554]`
+
 ### Kanban must sync from ChangesStore
 
 `KanbanPage` must call `loadFromChanges(realChanges)` in a `useEffect` watching `useChangesStore(s => s.changes)`. Otherwise it shows stale mock data.
