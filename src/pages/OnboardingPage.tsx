@@ -50,27 +50,27 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background">
+    <div className="flex h-screen w-screen items-center justify-center bg-[#0b1326]">
       <div className="w-full max-w-md space-y-8 px-4">
         {/* Logo + Title */}
         <div className="flex flex-col items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-card">
-            <Layers size={28} className="text-primary" strokeWidth={1.5} />
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#464554] bg-[#171f33]">
+            <Layers size={28} className="text-[#6366f1]" strokeWidth={1.5} />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-semibold text-foreground">Specboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h1 className="text-2xl font-semibold text-[#dae2fd]">Specboard</h1>
+            <p className="mt-1 text-sm text-[#908fa0]">
               Visual interface for OpenSpec projects
             </p>
           </div>
         </div>
 
         {/* Main card */}
-        <Card>
+        <Card className="border-[#464554] bg-[#171f33]">
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Open workspace</CardTitle>
-            <CardDescription>
-              Select a folder that contains an <code className="text-primary">openspec/</code> directory
+            <CardTitle className="text-sm font-medium text-[#dae2fd]">Open workspace</CardTitle>
+            <CardDescription className="text-[#908fa0]">
+              Select a folder that contains an <code className="text-[#6366f1]">openspec/</code> directory
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
                 {/* Divider */}
                 <div className="flex items-center gap-3">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or enter path</span>
+                  <span className="text-xs text-[#908fa0]">or enter path</span>
                   <Separator className="flex-1" />
                 </div>
               </>
@@ -127,9 +127,9 @@ export default function OnboardingPage() {
         {recentWorkspaces.length > 0 && (
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 px-1">
-              <Clock size={12} className="text-muted-foreground" strokeWidth={1.5} />
+              <Clock size={12} className="text-[#908fa0]" strokeWidth={1.5} />
               <span
-                className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground"
+                className="text-[10px] font-semibold uppercase tracking-widest text-[#908fa0]"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 Recent
@@ -141,11 +141,11 @@ export default function OnboardingPage() {
                 variant="outline"
                 onClick={() => openWorkspace(path)}
                 disabled={isLoading}
-                className="w-full justify-start gap-3 px-3 py-2.5 h-auto"
+                className="w-full justify-start gap-3 px-3 py-2.5 h-auto bg-[#171f33] border-[#464554] hover:border-[#6366f1] hover:bg-[#222a3d]"
               >
-                <FolderOpen size={14} className="shrink-0 text-muted-foreground" strokeWidth={1.5} />
+                <FolderOpen size={14} className="shrink-0 text-[#908fa0]" strokeWidth={1.5} />
                 <span
-                  className="truncate text-xs text-muted-foreground"
+                  className="truncate text-xs text-[#c7c4d7]"
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
                   {path}
