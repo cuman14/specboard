@@ -17,6 +17,11 @@ import {
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const artifactIcons = {
   proposal: FileText,
@@ -26,42 +31,11 @@ const artifactIcons = {
 };
 
 const artifactStatusColors: Record<string, string> = {
-  ready: "text-[#22c55e] border-[#22c55e]/30 bg-[#22c55e]/10",
-  pending: "text-[#f59e0b] border-[#f59e0b]/30 bg-[#f59e0b]/10",
-  blocked: "text-[#ef4444] border-[#ef4444]/30 bg-[#ef4444]/10",
-  missing: "text-[#908fa0] border-[#464554] bg-[#464554]/10",
+  ready: "text-success border-success/30 bg-success/10",
+  pending: "text-warning border-warning/30 bg-warning/10",
+  blocked: "text-destructive border-destructive/30 bg-destructive/10",
+  missing: "text-muted-foreground border-border bg-border/10",
 };
-
-function ArtifactTab({
-  artifact,
-  isActive,
-  onClick,
-}: {
-  artifact: Artifact;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const Icon = artifactIcons[artifact.name];
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors ${
-        isActive
-          ? "border-[#6366f1] text-[#dae2fd]"
-          : "border-transparent text-[#908fa0] hover:text-[#c7c4d7]"
-      }`}
-    >
-      <Icon size={14} strokeWidth={1.5} />
-      <span className="capitalize">{artifact.name}</span>
-      <span
-        className={`ml-1 inline-flex rounded-full border px-1.5 py-0.5 text-[9px] font-semibold ${artifactStatusColors[artifact.status]}`}
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        {artifact.status}
-      </span>
-    </button>
-  );
-}
 
 export default function ChangeDetail() {
   const { changeId } = useParams<{ changeId: string }>();
@@ -70,7 +44,6 @@ export default function ChangeDetail() {
 
   const change = changes.find((c) => c.id === changeId);
 
-  // React pattern: useState for tab selection + artifact content
   const [activeTab, setActiveTab] = useState<Artifact["name"]>("proposal");
   const [content, setContent] = useState<string | null>(null);
   const [isLoadingContent, setIsLoadingContent] = useState(false);
@@ -78,7 +51,6 @@ export default function ChangeDetail() {
   const activeArtifact = change?.artifacts.find((a) => a.name === activeTab);
   const { completed, total } = getArtifactProgress(change?.artifacts ?? []);
 
-  // React pattern: useEffect to load artifact content when tab changes
   useEffect(() => {
     if (!activeArtifact || activeArtifact.status === "missing") {
       setContent(null);
@@ -116,16 +88,17 @@ export default function ChangeDetail() {
         <div className="text-center">
           <AlertCircle
             size={32}
-            className="mx-auto mb-2 text-[#464554]"
+            className="mx-auto mb-2 text-border"
             strokeWidth={1}
           />
-          <p className="text-sm text-[#908fa0]">Change not found</p>
-          <button
+          <p className="text-sm text-muted-foreground">Change not found</p>
+          <Button
+            variant="link"
             onClick={() => navigate("/changes")}
-            className="mt-3 text-xs text-[#6366f1] hover:underline"
+            className="mt-3 text-xs"
           >
             Back to changes
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -134,18 +107,20 @@ export default function ChangeDetail() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#464554] px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
         <div className="flex items-center gap-3">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => navigate("/changes")}
-            className="flex items-center gap-1.5 text-xs text-[#908fa0] transition-colors hover:text-[#dae2fd]"
+            className="gap-1.5 text-xs text-muted-foreground"
           >
             <ArrowLeft size={14} strokeWidth={1.5} />
             Changes
-          </button>
-          <span className="text-[#464554]">/</span>
+          </Button>
+          <span className="text-border">/</span>
           <span
-            className="text-sm font-medium text-[#dae2fd]"
+            className="text-sm font-medium text-foreground"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             {change.name}
@@ -154,232 +129,251 @@ export default function ChangeDetail() {
 
         <div className="flex items-center gap-2">
           {/* Progress */}
-          <span className="text-xs text-[#908fa0]">
+          <span className="text-xs text-muted-foreground">
             {completed}/{total} artifacts
           </span>
-          <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[#2d3449]">
-            <div
-              className="h-full rounded-full bg-[#6366f1]"
-              style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%` }}
-            />
-          </div>
+          <Progress value={total > 0 ? (completed / total) * 100 : 0} className="h-1.5 w-20" />
 
-          <button className="flex items-center gap-1.5 rounded border border-[#464554] bg-transparent px-2.5 py-1.5 text-xs text-[#c7c4d7] transition-colors hover:border-[#22c55e] hover:text-[#22c55e]">
+          <Button variant="outline" size="sm">
             <CheckCircle2 size={13} strokeWidth={1.5} />
             Validate
-          </button>
-          <button className="flex items-center gap-1.5 rounded border border-[#464554] bg-transparent px-2.5 py-1.5 text-xs text-[#c7c4d7] transition-colors hover:border-[#6366f1] hover:text-[#6366f1]">
+          </Button>
+          <Button variant="outline" size="sm">
             <Archive size={13} strokeWidth={1.5} />
             Archive
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Artifact tabs */}
-      <div className="flex border-b border-[#464554] bg-[#171f33]">
-        {change.artifacts.map((artifact) => (
-          <ArtifactTab
-            key={artifact.name}
-            artifact={artifact}
-            isActive={activeTab === artifact.name}
-            onClick={() => setActiveTab(artifact.name)}
-          />
-        ))}
-      </div>
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Artifact["name"])} className="flex flex-col">
+        <div className="flex border-b border-border bg-card">
+          <TabsList className="bg-transparent h-auto p-0 rounded-none gap-0">
+            {change.artifacts.map((artifact) => {
+              const Icon = artifactIcons[artifact.name];
+              return (
+                <TabsTrigger
+                  key={artifact.name}
+                  value={artifact.name}
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground rounded-none px-4 py-2.5 text-sm font-medium gap-1.5"
+                >
+                  <Icon size={14} strokeWidth={1.5} />
+                  <span className="capitalize">{artifact.name}</span>
+                  <Badge
+                    variant="outline"
+                    className={`ml-1 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold ${artifactStatusColors[artifact.status]}`}
+                    style={{ fontFamily: "var(--font-mono)" }}
+                  >
+                    {artifact.status}
+                  </Badge>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </div>
 
-      {/* Metadata bar */}
-      <div className="flex items-center gap-4 border-b border-[#464554]/50 px-4 py-1.5">
-        <span className="text-xs text-[#908fa0]">
-          Schema:{" "}
-          <span
-            className="text-[#c7c4d7]"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            {change.schema}
-          </span>
-        </span>
-        <span className="text-xs text-[#908fa0]">
-          Created:{" "}
-          <span className="text-[#c7c4d7]">{formatDate(change.createdAt)}</span>
-        </span>
-        {activeArtifact?.lastModified && (
-          <span className="text-xs text-[#908fa0]">
-            Last modified:{" "}
-            <span className="text-[#c7c4d7]">
-              {formatDate(activeArtifact.lastModified)}
+        {/* Metadata bar */}
+        <div className="flex items-center gap-4 border-b border-border/50 px-4 py-1.5">
+          <span className="text-xs text-muted-foreground">
+            Schema:{" "}
+            <span
+              className="text-muted-foreground"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              {change.schema}
             </span>
           </span>
-        )}
-      </div>
+          <span className="text-xs text-muted-foreground">
+            Created:{" "}
+            <span className="text-muted-foreground">{formatDate(change.createdAt)}</span>
+          </span>
+          {activeArtifact?.lastModified && (
+            <span className="text-xs text-muted-foreground">
+              Last modified:{" "}
+              <span className="text-muted-foreground">
+                {formatDate(activeArtifact.lastModified)}
+              </span>
+            </span>
+          )}
+        </div>
 
-      {/* Content area */}
-      <div className="flex-1 overflow-y-auto p-5">
-        {isLoadingContent ? (
-          <div className="flex h-full items-center justify-center">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#464554] border-t-[#6366f1]" />
-          </div>
-        ) : activeArtifact?.status === "missing" ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#464554] bg-[#171f33]">
-              {(() => {
-                const Icon = artifactIcons[activeTab];
-                return (
-                  <Icon size={22} className="text-[#464554]" strokeWidth={1} />
-                );
-              })()}
-            </div>
-            <p className="text-sm text-[#908fa0]">
-              <span className="capitalize">{activeTab}</span> artifact not yet
-              created
-            </p>
-            <p className="text-xs text-[#464554]">
-              Run{" "}
-              <code className="text-[#6366f1]">
-                openspec instructions --change {change.name}
-              </code>{" "}
-              to see next steps
-            </p>
-          </div>
-        ) : content ? (
-          activeTab === "tasks" ? (
-            <TasksView content={content} />
-          ) : (
-            <div style={{ color: "#d1d5db", fontFamily: "var(--font-sans)" }}>
-              <ReactMarkdown
-                components={{
-                  h1: ({ children }) => (
-                    <h1
-                      style={{
-                        color: "#f3f4f6",
-                        fontSize: "1.5rem",
-                        fontWeight: 700,
-                        marginBottom: "0.75rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {children}
-                    </h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2
-                      style={{
-                        color: "#e5e7eb",
-                        fontSize: "1.2rem",
-                        fontWeight: 600,
-                        margin: "1.25rem 0 0.75rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3
-                      style={{
-                        color: "#d1d5db",
-                        fontSize: "1rem",
-                        fontWeight: 600,
-                        margin: "1rem 0 0.5rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {children}
-                    </h3>
-                  ),
-                  p: ({ children }) => (
-                    <p
-                      style={{
-                        color: "#d1d5db",
-                        lineHeight: 1.8,
-                        marginBottom: "1rem",
-                      }}
-                    >
-                      {children}
-                    </p>
-                  ),
-                  li: ({ children }) => (
-                    <li
-                      style={{
-                        color: "#d1d5db",
-                        marginBottom: "0.35rem",
-                        lineHeight: 1.7,
-                      }}
-                    >
-                      {children}
-                    </li>
-                  ),
-                  code: ({ children }) => (
-                    <code
-                      style={{
-                        background: "#1e293b",
-                        color: "#818cf8",
-                        padding: "0.15em 0.5em",
-                        borderRadius: 4,
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.875em",
-                      }}
-                    >
-                      {children}
-                    </code>
-                  ),
-                  pre: ({ children }) => (
-                    <pre
-                      style={{
-                        background: "#171f33",
-                        padding: "1rem",
-                        borderRadius: 4,
-                        overflowX: "auto",
-                        marginBottom: "1rem",
-                      }}
-                    >
-                      {children}
-                    </pre>
-                  ),
-                  strong: ({ children }) => (
-                    <strong style={{ color: "#f3f4f6", fontWeight: 700 }}>
-                      {children}
-                    </strong>
-                  ),
-                  a: ({ children, href }) => (
-                    <a
-                      href={href}
-                      style={{ color: "#818cf8", textDecoration: "underline" }}
-                    >
-                      {children}
-                    </a>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote
-                      style={{
-                        borderLeft: "3px solid #6366f1",
-                        paddingLeft: "1rem",
-                        marginLeft: 0,
-                        color: "#9ca3af",
-                      }}
-                    >
-                      {children}
-                    </blockquote>
-                  ),
-                  hr: () => (
-                    <hr
-                      style={{
-                        borderColor: "#4b5563",
-                        margin: "1.25rem 0",
-                        borderStyle: "solid",
-                        borderWidth: "1px 0 0 0",
-                      }}
-                    />
-                  ),
-                }}
-              >
-                {content}
-              </ReactMarkdown>
-            </div>
-          )
-        ) : (
-          <p className="text-sm text-[#a1a5b7]">Unable to load content</p>
-        )}
-      </div>
+        {/* Content area */}
+        {change.artifacts.map((artifact) => (
+          <TabsContent key={artifact.name} value={artifact.name} className="flex-1 overflow-hidden m-0">
+            <ScrollArea className="h-full p-5">
+              {artifact.name === activeTab && (
+                <>
+                  {isLoadingContent ? (
+                    <div className="flex h-full items-center justify-center">
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
+                    </div>
+                  ) : artifact.status === "missing" ? (
+                    <div className="flex flex-col items-center justify-center gap-3 py-16">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card">
+                        {(() => {
+                          const Icon = artifactIcons[artifact.name];
+                          return (
+                            <Icon size={22} className="text-border" strokeWidth={1} />
+                          );
+                        })()}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="capitalize">{artifact.name}</span> artifact not yet
+                        created
+                      </p>
+                      <p className="text-xs text-border">
+                        Run{" "}
+                        <code className="text-primary">
+                          openspec instructions --change {change.name}
+                        </code>{" "}
+                        to see next steps
+                      </p>
+                    </div>
+                  ) : content ? (
+                    artifact.name === "tasks" ? (
+                      <TasksView content={content} />
+                    ) : (
+                      <div style={{ color: "#d1d5db", fontFamily: "var(--font-sans)" }}>
+                        <ReactMarkdown
+                          components={{
+                            h1: ({ children }) => (
+                              <h1
+                                style={{
+                                  color: "#f3f4f6",
+                                  fontSize: "1.5rem",
+                                  fontWeight: 700,
+                                  marginBottom: "0.75rem",
+                                  lineHeight: 1.3,
+                                }}
+                              >
+                                {children}
+                              </h1>
+                            ),
+                            h2: ({ children }) => (
+                              <h2
+                                style={{
+                                  color: "#e5e7eb",
+                                  fontSize: "1.2rem",
+                                  fontWeight: 600,
+                                  margin: "1.25rem 0 0.75rem",
+                                  lineHeight: 1.3,
+                                }}
+                              >
+                                {children}
+                              </h2>
+                            ),
+                            h3: ({ children }) => (
+                              <h3
+                                style={{
+                                  color: "#d1d5db",
+                                  fontSize: "1rem",
+                                  fontWeight: 600,
+                                  margin: "1rem 0 0.5rem",
+                                  lineHeight: 1.3,
+                                }}
+                              >
+                                {children}
+                              </h3>
+                            ),
+                            p: ({ children }) => (
+                              <p
+                                style={{
+                                  color: "#d1d5db",
+                                  lineHeight: 1.8,
+                                  marginBottom: "1rem",
+                                }}
+                              >
+                                {children}
+                              </p>
+                            ),
+                            li: ({ children }) => (
+                              <li
+                                style={{
+                                  color: "#d1d5db",
+                                  marginBottom: "0.35rem",
+                                  lineHeight: 1.7,
+                                }}
+                              >
+                                {children}
+                              </li>
+                            ),
+                            code: ({ children }) => (
+                              <code
+                                style={{
+                                  background: "#1e293b",
+                                  color: "#818cf8",
+                                  padding: "0.15em 0.5em",
+                                  borderRadius: 4,
+                                  fontFamily: "var(--font-mono)",
+                                  fontSize: "0.875em",
+                                }}
+                              >
+                                {children}
+                              </code>
+                            ),
+                            pre: ({ children }) => (
+                              <pre
+                                style={{
+                                  background: "#171f33",
+                                  padding: "1rem",
+                                  borderRadius: 4,
+                                  overflowX: "auto",
+                                  marginBottom: "1rem",
+                                }}
+                              >
+                                {children}
+                              </pre>
+                            ),
+                            strong: ({ children }) => (
+                              <strong style={{ color: "#f3f4f6", fontWeight: 700 }}>
+                                {children}
+                              </strong>
+                            ),
+                            a: ({ children, href }) => (
+                              <a
+                                href={href}
+                                style={{ color: "#818cf8", textDecoration: "underline" }}
+                              >
+                                {children}
+                              </a>
+                            ),
+                            blockquote: ({ children }) => (
+                              <blockquote
+                                style={{
+                                  borderLeft: "3px solid #6366f1",
+                                  paddingLeft: "1rem",
+                                  marginLeft: 0,
+                                  color: "#9ca3af",
+                                }}
+                              >
+                                {children}
+                              </blockquote>
+                            ),
+                            hr: () => (
+                              <hr
+                                style={{
+                                  borderColor: "#4b5563",
+                                  margin: "1.25rem 0",
+                                  borderStyle: "solid",
+                                  borderWidth: "1px 0 0 0",
+                                }}
+                              />
+                            ),
+                          }}
+                        >
+                          {content}
+                        </ReactMarkdown>
+                      </div>
+                    )
+                  ) : (
+                    <p className="text-sm text-[#a1a5b7]">Unable to load content</p>
+                  )}
+                </>
+              )}
+            </ScrollArea>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 }

@@ -280,6 +280,9 @@ The workflow has three jobs:
 | pnpm pinned to `@9` | Prevents unexpected breaking changes from latest |
 | Homebrew regex scoped to `on_arm` | Prevents matching wrong `sha256` entries if bottle block is added |
 | `scripts/deploy/` consolidation | All deploy scripts in one place; no dead code at root |
+| Deploy scripts use `path.resolve(__dirname, "../..")` | Scripts moved from `scripts/` to `scripts/deploy/`, so root is two levels up |
+| `pnpm-workspace.yaml` MUST include `packages` field | pnpm fails with "packages field missing or empty" without it |
+| `pnpm-lock.yaml` must be regenerated after workspace changes | CI fails with `ERR_PNPM_OUTDATED_LOCKFILE` if lockfile doesn't match workspace package.json files |
 | `pnpm audit` in CI | Catches known vulnerabilities before release |
 | No `minimumReleaseAge` equivalent | pnpm has no native property for this; supply chain age checks require external tooling |
 
@@ -360,6 +363,22 @@ Folders inside `openspec/changes/` with no `.md` or `.yaml` files are skipped in
 ### `read_artifact` handles directories automatically
 
 If called with a directory path, the Rust command now auto-loads `spec.md` inside it. No need to handle this in the frontend beyond constructing the path.
+
+---
+
+## Git Workflow
+
+### Create branch before applying a spec
+
+Before implementing any spec, proposal, or change, **always create a git branch** named after the spec:
+
+```bash
+git checkout -b <spec-name>
+```
+
+- Use the exact change/spec folder name (kebab-case)
+- Do this before writing any code or modifying files
+- Ensure the branch is created from the current working branch (usually `main`)
 
 ---
 

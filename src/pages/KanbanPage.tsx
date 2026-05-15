@@ -20,14 +20,16 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { AlertCircle, GripVertical } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 const COLUMNS: { id: KanbanColumn; label: string; color: string }[] = [
-  { id: "draft", label: "Draft", color: "text-[#908fa0]" },
-  { id: "in-review", label: "In Review", color: "text-[#f59e0b]" },
-  { id: "validated", label: "Validated", color: "text-[#22c55e]" },
+  { id: "draft", label: "Draft", color: "text-muted-foreground" },
+  { id: "in-review", label: "In Review", color: "text-warning" },
+  { id: "validated", label: "Validated", color: "text-success" },
 ];
 
-// React pattern: React.memo to prevent re-renders during drag
 const KanbanCard = memo(function KanbanCard({
   change,
   isDragging,
@@ -51,22 +53,24 @@ const KanbanCard = memo(function KanbanCard({
     <div
       ref={setNodeRef}
       style={style}
-      className="group cursor-default rounded border border-[#464554] bg-[#171f33] p-3 transition-colors hover:border-[#6366f1]"
+      className="group cursor-default rounded border border-border bg-card p-3 transition-colors hover:border-primary"
     >
       <div className="flex items-start justify-between gap-2">
         <span
-          className="text-sm font-medium text-[#dae2fd]"
+          className="text-sm font-medium text-foreground"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           {change.name}
         </span>
-        <button
+        <Button
           {...attributes}
           {...listeners}
-          className="mt-0.5 shrink-0 cursor-grab text-[#464554] opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+          variant="ghost"
+          size="icon"
+          className="mt-0.5 h-5 w-5 shrink-0 cursor-grab text-border opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
         >
           <GripVertical size={14} strokeWidth={1.5} />
-        </button>
+        </Button>
       </div>
 
       <div className="mt-2.5">
@@ -77,38 +81,34 @@ const KanbanCard = memo(function KanbanCard({
               title={`${a.name}: ${a.status}`}
               className={`h-1.5 w-1.5 rounded-full ${
                 a.status === "ready"
-                  ? "bg-[#22c55e]"
+                  ? "bg-success"
                   : a.status === "pending"
-                    ? "bg-[#f59e0b]"
+                    ? "bg-warning"
                     : a.status === "blocked"
-                      ? "bg-[#ef4444]"
-                      : "bg-[#2d3449]"
+                      ? "bg-destructive"
+                      : "bg-surface-highest"
               }`}
             />
           ))}
-          <span className="ml-1 text-[11px] text-[#908fa0]">
+          <span className="ml-1 text-[11px] text-muted-foreground">
             {completed}/{total}
           </span>
         </div>
 
         {change.tasksTotal > 0 && (
           <div className="mt-1.5">
-            <div className="h-1 overflow-hidden rounded-full bg-[#2d3449]">
-              <div
-                className="h-full rounded-full bg-[#6366f1]"
-                style={{
-                  width: `${(change.tasksCompleted / change.tasksTotal) * 100}%`,
-                }}
-              />
-            </div>
-            <span className="text-[11px] text-[#908fa0]">
+            <Progress
+              value={(change.tasksCompleted / change.tasksTotal) * 100}
+              className="h-1"
+            />
+            <span className="text-[11px] text-muted-foreground">
               {change.tasksCompleted}/{change.tasksTotal} tasks
             </span>
           </div>
         )}
 
         {change.status === "blocked" && (
-          <div className="mt-1.5 flex items-center gap-1 text-[11px] text-[#ef4444]">
+          <div className="mt-1.5 flex items-center gap-1 text-[11px] text-destructive">
             <AlertCircle size={11} strokeWidth={1.5} />
             Blocked
           </div>
@@ -128,8 +128,8 @@ function KanbanColumn({
   changes: Record<string, Change>;
 }) {
   return (
-    <div className="flex w-72 shrink-0 flex-col rounded border border-[#464554] bg-[#171f33]">
-      <div className="flex items-center justify-between border-b border-[#464554] px-3 py-2.5">
+    <div className="flex w-72 shrink-0 flex-col rounded border border-border bg-card">
+      <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
         <div className="flex items-center gap-2">
           <span
             className={`text-xs font-semibold uppercase tracking-widest ${column.color}`}
@@ -138,9 +138,9 @@ function KanbanColumn({
             {column.label}
           </span>
         </div>
-        <span className="rounded-full bg-[#2d3449] px-2 py-0.5 text-[11px] font-medium text-[#908fa0]">
+        <Badge variant="secondary" className="text-[11px]">
           {cardIds.length}
-        </span>
+        </Badge>
       </div>
 
       <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
@@ -151,7 +151,7 @@ function KanbanColumn({
             return <KanbanCard key={id} change={change} />;
           })}
           {cardIds.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-8 text-xs text-[#464554]">
+            <div className="flex flex-col items-center justify-center py-8 text-xs text-border">
               Drop cards here
             </div>
           )}
@@ -165,14 +165,12 @@ export default function KanbanPage() {
   const { columns, changes, moveCard, loadFromChanges } = useKanbanStore();
   const realChanges = useChangesStore((s) => s.changes);
 
-  // Sync real changes into kanban store
   useEffect(() => {
     if (realChanges.length > 0) {
       loadFromChanges(realChanges);
     }
   }, [realChanges, loadFromChanges]);
 
-  // React pattern: lifting state up - active drag ID shared across all columns
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -181,7 +179,6 @@ export default function KanbanPage() {
     }),
   );
 
-  // React pattern: useCallback for stable event handler reference
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setActiveDragId(String(event.active.id));
   }, []);
@@ -212,9 +209,9 @@ export default function KanbanPage() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="border-b border-[#464554] px-5 py-3">
-        <h1 className="text-base font-semibold text-[#dae2fd]">Kanban Board</h1>
-        <p className="text-xs text-[#908fa0]">
+      <div className="border-b border-border px-5 py-3">
+        <h1 className="text-base font-semibold text-foreground">Kanban Board</h1>
+        <p className="text-xs text-muted-foreground">
           Drag cards to move changes between stages
         </p>
       </div>

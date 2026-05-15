@@ -1,5 +1,6 @@
 import { CheckCircle2, Circle } from "lucide-react";
 import { useMemo } from "react";
+import { Progress } from "@/components/ui/progress";
 
 interface Task {
   id: string;
@@ -19,11 +20,9 @@ function parseTasks(markdown: string): Layer[] {
   let currentLayer: Layer | null = null;
 
   for (const line of lines) {
-    // Detect section headers (## Capa X or ## Section)
     const headingMatch = line.match(/^#{1,3}\s+(.+)/);
     if (headingMatch) {
       const title = headingMatch[1].trim();
-      // Skip progress/summary sections
       if (/progreso|secuencia|trigger|commit/i.test(title)) {
         currentLayer = null;
         continue;
@@ -33,14 +32,12 @@ function parseTasks(markdown: string): Layer[] {
       continue;
     }
 
-    // Detect tasks: - [x] or - [ ]
     const taskMatch = line.match(
       /^[\s-]*\[([x ])\]\s+\*{0,2}([^*\n]+)\*{0,2}/i,
     );
     if (taskMatch && currentLayer) {
       const done = taskMatch[1].toLowerCase() === "x";
       const label = taskMatch[2].trim();
-      // Extract tag like T-1.1 from label
       currentLayer.tasks.push({
         id: `${currentLayer.title}-${currentLayer.tasks.length}`,
         label,
@@ -50,7 +47,6 @@ function parseTasks(markdown: string): Layer[] {
     }
   }
 
-  // If no layers found (simple task list), put all tasks in one group
   if (layers.length === 0) {
     const defaultLayer: Layer = { title: "Tasks", tasks: [] };
     for (const line of lines) {
@@ -81,7 +77,7 @@ export default function TasksView({ content }: { content: string }) {
   const layers = useMemo(() => parseTasks(content), [content]);
 
   if (layers.length === 0) {
-    return <p className="text-sm text-[#908fa0]">No tasks found</p>;
+    return <p className="text-sm text-muted-foreground">No tasks found</p>;
   }
 
   const totalTasks = layers.flatMap((l) => l.tasks).length;
@@ -96,19 +92,9 @@ export default function TasksView({ content }: { content: string }) {
           <span className="text-[#a1a5b7]">
             {doneTasks} / {totalTasks} tasks completed
           </span>
-          <span className="font-medium text-[#e8ecf4]">{pct}%</span>
+          <span className="font-medium text-foreground">{pct}%</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-[#222a3d]">
-          <div
-            className="h-full rounded-full bg-[#6366f1] transition-all duration-300"
-            style={{ width: `${pct}%` }}
-            aria-label={`Progress: ${pct}%`}
-            role="progressbar"
-            aria-valuenow={pct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          />
-        </div>
+        <Progress value={pct} aria-label={`Progress: ${pct}%`} />
       </div>
 
       {/* Layers */}
@@ -133,10 +119,10 @@ export default function TasksView({ content }: { content: string }) {
                 return (
                   <div
                     key={task.id}
-                    className={`flex cursor-pointer items-start gap-3 rounded border px-3 py-2.5 transition-colors focus-within:ring-1 focus-within:ring-[#6366f1] ${
+                    className={`flex cursor-pointer items-start gap-3 rounded border px-3 py-2.5 transition-colors focus-within:ring-1 focus-within:ring-primary ${
                       task.done
-                        ? "border-[#22c55e]/30 bg-[#22c55e]/10"
-                        : "border-[#4b5563] bg-[#171f33]"
+                        ? "border-success/30 bg-success/10"
+                        : "border-[#4b5563] bg-card"
                     }`}
                     tabIndex={0}
                     role="listitem"
@@ -145,7 +131,7 @@ export default function TasksView({ content }: { content: string }) {
                     {task.done ? (
                       <CheckCircle2
                         size={15}
-                        className="mt-0.5 shrink-0 text-[#22c55e]"
+                        className="mt-0.5 shrink-0 text-success"
                         strokeWidth={2}
                       />
                     ) : (

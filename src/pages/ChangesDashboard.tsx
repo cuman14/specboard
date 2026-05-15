@@ -22,18 +22,22 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const statusColors: Record<string, string> = {
-  active: "text-[#6366f1] bg-[#6366f1]/10 border-[#6366f1]/30",
-  blocked: "text-[#ef4444] bg-[#ef4444]/10 border-[#ef4444]/30",
-  archived: "text-[#908fa0] bg-[#908fa0]/10 border-[#908fa0]/30",
+  active: "text-primary bg-primary/10 border-primary/30",
+  blocked: "text-destructive bg-destructive/10 border-destructive/30",
+  archived: "text-muted-foreground bg-muted-foreground/10 border-muted-foreground/30",
 };
 
 const artifactStatusColors: Record<string, string> = {
-  ready: "bg-[#22c55e]",
-  pending: "bg-[#f59e0b]",
-  blocked: "bg-[#ef4444]",
-  missing: "bg-[#2d3449]",
+  ready: "bg-success",
+  pending: "bg-warning",
+  blocked: "bg-destructive",
+  missing: "bg-surface-highest",
 };
 
 function ChangeRow({
@@ -49,22 +53,23 @@ function ChangeRow({
   return (
     <div
       onClick={onClick}
-      className="group flex cursor-pointer items-center gap-4 border-b border-[#464554]/50 px-4 py-3 transition-colors hover:bg-[#222a3d]"
+      className="group flex cursor-pointer items-center gap-4 border-b border-border/50 px-4 py-3 transition-colors hover:bg-surface-high"
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span
-            className="truncate text-sm font-medium text-[#dae2fd]"
+            className="truncate text-sm font-medium text-foreground"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             {change.name}
           </span>
-          <span
-            className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${statusColors[change.status]}`}
+          <Badge
+            variant="outline"
+            className={`text-[10px] font-semibold ${statusColors[change.status]}`}
             style={{ fontFamily: "var(--font-mono)" }}
           >
             {change.status}
-          </span>
+          </Badge>
         </div>
         <div className="mt-1.5 flex items-center gap-3">
           {/* Artifact dots */}
@@ -77,11 +82,11 @@ function ChangeRow({
               />
             ))}
           </div>
-          <span className="text-xs text-[#908fa0]">
+          <span className="text-xs text-muted-foreground">
             {completed}/{total} artifacts
           </span>
           {change.tasksTotal > 0 && (
-            <span className="text-xs text-[#908fa0]">
+            <span className="text-xs text-muted-foreground">
               {change.tasksCompleted}/{change.tasksTotal} tasks
             </span>
           )}
@@ -91,19 +96,14 @@ function ChangeRow({
       <div className="flex items-center gap-4">
         {/* Progress bar */}
         <div className="w-20">
-          <div className="h-1 overflow-hidden rounded-full bg-[#2d3449]">
-            <div
-              className="h-full rounded-full bg-[#6366f1] transition-all"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
+          <Progress value={pct} className="h-1" />
         </div>
-        <span className="w-12 text-right text-xs text-[#908fa0]">
+        <span className="w-12 text-right text-xs text-muted-foreground">
           {formatRelativeTime(change.createdAt)}
         </span>
         <ArrowRight
           size={14}
-          className="shrink-0 text-[#464554] transition-colors group-hover:text-[#6366f1]"
+          className="shrink-0 text-border transition-colors group-hover:text-primary"
           strokeWidth={1.5}
         />
       </div>
@@ -146,7 +146,6 @@ export default function ChangesDashboard() {
     };
   }, [workspace?.path, loadChanges, handleSync]);
 
-  // React pattern: useMemo for derived / filtered data
   const filtered = useMemo(() => getFilteredChanges(), [changes, filter]);
 
   const stats = useMemo(
@@ -168,37 +167,39 @@ export default function ChangesDashboard() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#464554] px-5 py-3">
+      <div className="flex items-center justify-between border-b border-border px-5 py-3">
         <div>
-          <h1 className="text-base font-semibold text-[#dae2fd]">Changes</h1>
-          <p className="text-xs text-[#908fa0]">
+          <h1 className="text-base font-semibold text-foreground">Changes</h1>
+          <p className="text-xs text-muted-foreground">
             {workspace?.path ?? "No workspace"}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             onClick={handleSync}
             disabled={isLoading}
+            variant="outline"
+            size="sm"
             title="Sync workspace"
-            className="flex items-center gap-1.5 rounded border border-[#464554] bg-transparent px-2.5 py-1.5 text-xs font-medium text-[#c7c4d7] transition-colors hover:border-[#6366f1] hover:text-[#dae2fd] disabled:opacity-50"
           >
             <RefreshCw
               size={13}
               strokeWidth={1.5}
               className={isLoading ? "animate-spin" : ""}
             />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleChangeWorkspace}
-            className="flex items-center gap-1.5 rounded border border-[#464554] bg-transparent px-3 py-1.5 text-xs font-medium text-[#c7c4d7] transition-colors hover:border-[#6366f1] hover:text-[#dae2fd]"
+            variant="outline"
+            size="sm"
           >
             <FolderOpen size={14} strokeWidth={1.5} />
             Change workspace
-          </button>
-          <button className="flex items-center gap-1.5 rounded border border-[#464554] bg-[#6366f1] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#4f46e5]">
+          </Button>
+          <Button size="sm">
             <Plus size={14} strokeWidth={1.5} />
             New change
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -206,75 +207,73 @@ export default function ChangesDashboard() {
         {/* Main content */}
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Stats row */}
-          <div className="grid grid-cols-4 gap-px border-b border-[#464554] bg-[#464554]">
+          <div className="grid grid-cols-4 gap-px border-b border-border bg-border">
             {[
               {
                 label: "Active",
                 value: stats.active,
                 icon: GitBranch,
-                color: "text-[#6366f1]",
+                color: "text-primary",
               },
               {
                 label: "Blocked",
                 value: stats.blocked,
                 icon: AlertCircle,
-                color: "text-[#ef4444]",
+                color: "text-destructive",
               },
               {
                 label: "Archived",
                 value: stats.archived,
                 icon: Archive,
-                color: "text-[#908fa0]",
+                color: "text-muted-foreground",
               },
               {
                 label: "Complete",
                 value: stats.readyToArchive,
                 icon: CheckCircle2,
-                color: "text-[#22c55e]",
+                color: "text-success",
               },
             ].map(({ label, value, icon: Icon, color }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 bg-[#171f33] px-4 py-3"
+                className="flex items-center gap-3 bg-card px-4 py-3"
               >
                 <Icon size={18} className={color} strokeWidth={1.5} />
                 <div>
-                  <div className="text-lg font-semibold text-[#dae2fd]">
+                  <div className="text-lg font-semibold text-foreground">
                     {value}
                   </div>
-                  <div className="text-xs text-[#908fa0]">{label}</div>
+                  <div className="text-xs text-muted-foreground">{label}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Filter bar */}
-          <div className="flex items-center gap-1 border-b border-[#464554] px-4 py-2">
+          <div className="flex items-center gap-1 border-b border-border px-4 py-2">
             {(["all", "active", "blocked"] as const).map((f) => (
-              <button
+              <Button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded px-2.5 py-1 text-xs font-medium capitalize transition-colors ${
-                  filter === f
-                    ? "bg-[#6366f1]/20 text-[#6366f1]"
-                    : "text-[#908fa0] hover:text-[#c7c4d7]"
-                }`}
+                variant={filter === f ? "secondary" : "ghost"}
+                size="sm"
+                className="text-xs font-medium capitalize"
               >
                 {f}
-              </button>
+              </Button>
             ))}
           </div>
 
           {/* Changes list */}
-          <div className="flex-1 overflow-y-auto">
+          <ScrollArea className="flex-1">
             {filtered.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center gap-2">
                 <GitBranch
                   size={32}
-                  className="text-[#464554]"
+                  className="text-border"
                   strokeWidth={1}
                 />
-                <p className="text-sm text-[#908fa0]">No changes found</p>
+                <p className="text-sm text-muted-foreground">No changes found</p>
               </div>
             ) : (
               filtered.map((change) => (
@@ -285,50 +284,52 @@ export default function ChangesDashboard() {
                 />
               ))
             )}
-          </div>
+          </ScrollArea>
         </div>
 
         {/* Activity feed */}
-        <div className="flex w-64 flex-col border-l border-[#464554]">
-          <div className="flex items-center gap-2 border-b border-[#464554] px-3 py-2.5">
-            <Activity size={14} className="text-[#908fa0]" strokeWidth={1.5} />
+        <div className="flex w-64 flex-col border-l border-border">
+          <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
+            <Activity size={14} className="text-muted-foreground" strokeWidth={1.5} />
             <span
-              className="text-[10px] font-semibold uppercase tracking-widest text-[#908fa0]"
+              className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Activity
             </span>
           </div>
-          <div className="flex-1 overflow-y-auto py-1">
-            {MOCK_ACTIVITY.map((item) => (
-              <div key={item.id} className="px-3 py-2.5 hover:bg-[#1c2438]">
-                <div className="flex items-start gap-2">
-                  <Clock
-                    size={11}
-                    className="mt-0.5 shrink-0 text-[#908fa0]"
-                    strokeWidth={1.5}
-                  />
-                  <div className="min-w-0">
-                    <p className="text-xs text-[#c7c4d7]">
-                      <span className="font-medium text-[#dae2fd]">
-                        {item.artifactName}
-                      </span>{" "}
-                      {item.action}
-                    </p>
-                    <p
-                      className="truncate text-[11px] text-[#908fa0]"
-                      style={{ fontFamily: "var(--font-mono)" }}
-                    >
-                      {item.changeName}
-                    </p>
-                    <p className="text-[11px] text-[#464554]">
-                      {formatRelativeTime(item.timestamp)}
-                    </p>
+          <ScrollArea className="flex-1">
+            <div className="py-1">
+              {MOCK_ACTIVITY.map((item) => (
+                <div key={item.id} className="px-3 py-2.5 hover:bg-[#1c2438]">
+                  <div className="flex items-start gap-2">
+                    <Clock
+                      size={11}
+                      className="mt-0.5 shrink-0 text-muted-foreground"
+                      strokeWidth={1.5}
+                    />
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">
+                        <span className="font-medium text-foreground">
+                          {item.artifactName}
+                        </span>{" "}
+                        {item.action}
+                      </p>
+                      <p
+                        className="truncate text-[11px] text-muted-foreground"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        {item.changeName}
+                      </p>
+                      <p className="text-[11px] text-border">
+                        {formatRelativeTime(item.timestamp)}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </div>
     </div>
