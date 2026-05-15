@@ -3,7 +3,6 @@
     "commitMessage": "chore(release): v${version}",
     "tagName": "v${version}",
     "pushRepo": "origin",
-    "requireBranch": "main",
     "requireCleanWorkingDir": false
   },
   "npm": {
@@ -20,16 +19,16 @@
       "preset": {
         "name": "conventionalcommits",
         "types": [
-          { "type": "feat",     "section": "✨ New Features" },
-          { "type": "fix",      "section": "🐛 Bug Fixes" },
-          { "type": "perf",     "section": "⚡ Performance" },
+          { "type": "feat", "section": "✨ New Features" },
+          { "type": "fix", "section": "🐛 Bug Fixes" },
+          { "type": "perf", "section": "⚡ Performance" },
           { "type": "refactor", "section": "♻️ Refactor" },
-          { "type": "docs",     "section": "📝 Documentation" },
-          { "type": "build",    "section": "🏗️ Build" },
-          { "type": "ci",       "section": "🤖 CI" },
-          { "type": "chore",    "hidden": true },
-          { "type": "style",    "hidden": true },
-          { "type": "test",     "hidden": true }
+          { "type": "docs", "section": "📝 Documentation" },
+          { "type": "build", "section": "🏗️ Build" },
+          { "type": "ci", "section": "🤖 CI" },
+          { "type": "chore", "hidden": true },
+          { "type": "style", "hidden": true },
+          { "type": "test", "hidden": true }
         ]
       },
       "infile": "CHANGELOG.md"
