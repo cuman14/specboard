@@ -1,6 +1,6 @@
 {
   "git": {
-    "commitMessage": "chore(release): v${version}",
+    "commitMessage": "chore(release): v${version} [skip ci]",
     "tagName": "v${version}",
     "pushRepo": "origin",
     "requireCleanWorkingDir": false
@@ -35,6 +35,8 @@
     }
   },
   "hooks": {
-    "before:bump": "node scripts/sync-versions.js"
+    "after:bump": "node scripts/sync-versions.js"
   }
 }
+
+

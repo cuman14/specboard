@@ -6,14 +6,13 @@
  * Lee los SHA256 desde los artifacts generados por CI
  * y actualiza scoop/specboard.json y homebrew/specboard.rb.
  *
- * Uso (en CI, tras descargar los artifacts con actions/download-artifact):
+ * Uso:
  *   node scripts/update-sha256.js --from-artifacts <directorio>
  *
- * Estructura esperada en <directorio>:
- *   sha256-windows/sha256.env  →  file=specboard_x.y.z_x64-setup.exe  +  hash=...
- *   sha256-macos-x64/sha256.env  →  file=specboard_x.y.z_x64.dmg      +  hash=...
- *   sha256-macos-arm/sha256.env  →  file=specboard_x.y.z_aarch64.dmg  +  hash=...
- *   sha256-linux/sha256.env    →  file=specboard_x.y.z_amd64.AppImage +  hash=...
+ * Estructura esperada:
+ *   sha256-windows/sha256.env   → file=Specboard_x.y.z_x64-setup.exe + hash=...
+ *   sha256-macos-arm/sha256.env → file=Specboard_x.y.z_aarch64.dmg   + hash=...
+ *   sha256-linux/sha256.env     → file=Specboard_x.y.z_amd64.AppImage + hash=...
  */
 
 import fs from "fs";
@@ -48,12 +47,11 @@ function readEnvFile(filePath) {
   return result;
 }
 
-// ── Cargar los artifacts de cada plataforma ─────────────────────
+// ── Cargar los 3 artifacts ──────────────────────────────────────
 const platforms = {
-  windows:   path.join(artifactsDir, "sha256-windows",   "sha256.env"),
-  macosX64:  path.join(artifactsDir, "sha256-macos-x64", "sha256.env"),
-  macosArm:  path.join(artifactsDir, "sha256-macos-arm", "sha256.env"),
-  linux:     path.join(artifactsDir, "sha256-linux",     "sha256.env"),
+  windows:  path.join(artifactsDir, "sha256-windows",  "sha256.env"),
+  macosArm: path.join(artifactsDir, "sha256-macos-arm","sha256.env"),
+  linux:    path.join(artifactsDir, "sha256-linux",    "sha256.env"),
 };
 
 const hashes = {};
@@ -69,27 +67,38 @@ for (const [platform, envPath] of Object.entries(platforms)) {
 // ── Actualizar scoop/specboard.json ─────────────────────────────
 const scoopPath = path.join(root, "scoop", "specboard.json");
 const scoop = JSON.parse(fs.readFileSync(scoopPath, "utf8"));
+
+// El nombre real del .exe tiene mayúscula (Specboard_x.y.z_x64-setup.exe)
+// La URL en scoop debe coincidir exactamente con el asset de GitHub Releases
+const winFile = hashes.windows.file; // e.g. Specboard_0.3.0_x64-setup.exe
+const version = winFile.match(/Specboard_([^_]+)_/)?.[1] ?? scoop.version;
+
+scoop.architecture["64bit"].url =
+  `https://github.com/cuman14/specboard/releases/download/v${version}/${winFile}`;
 scoop.architecture["64bit"].hash = hashes.windows.hash;
+
 fs.writeFileSync(scoopPath, JSON.stringify(scoop, null, 2) + "\n", "utf8");
-console.log(`✓ scoop/specboard.json actualizado`);
+console.log(`✓ scoop/specboard.json → ${winFile} / ${hashes.windows.hash.substring(0, 16)}...`);
 
 // ── Actualizar homebrew/specboard.rb ────────────────────────────
 const homebrewPath = path.join(root, "homebrew", "specboard.rb");
 let homebrew = fs.readFileSync(homebrewPath, "utf8");
 
-// arm64
+const macFile = hashes.macosArm.file; // e.g. Specboard_0.3.0_aarch64.dmg
+
+// Actualizar URL arm64
 homebrew = homebrew.replace(
-  /sha256 "REPLACE_WITH_SHA256_ARM"/,
-  `sha256 "${hashes.macosArm.hash}"`,
+  /url "https:\/\/github\.com\/cuman14\/specboard\/releases\/download\/[^"]+"/,
+  `url "https://github.com/cuman14/specboard/releases/download/v${version}/${macFile}"`,
 );
-// x64 — reemplaza tanto REPLACE_WITH_SHA256_X64 como hashes previos en el bloque on_intel
+
+// Actualizar sha256 arm64
 homebrew = homebrew.replace(
-  /(on_intel do[\s\S]*?sha256 ")[^"]+(")/,
-  `$1${hashes.macosX64.hash}$2`,
+  /sha256 "[^"]+"/,
+  `sha256 "${hashes.macosArm.hash}"`,
 );
 
 fs.writeFileSync(homebrewPath, homebrew, "utf8");
-console.log(`✓ homebrew/specboard.rb actualizado (arm64 + x64)`);
+console.log(`✓ homebrew/specboard.rb → ${macFile} / ${hashes.macosArm.hash.substring(0, 16)}...`);
 
 console.log("\n✅ SHA256 hashes actualizados correctamente");
-
