@@ -181,6 +181,7 @@ export default function ChangesDashboard() {
             variant="outline"
             size="sm"
             title="Sync workspace"
+            className="shadow-none bg-transparent"
           >
             <RefreshCw
               size={13}
@@ -192,6 +193,7 @@ export default function ChangesDashboard() {
             onClick={handleChangeWorkspace}
             variant="outline"
             size="sm"
+            className="shadow-none bg-transparent"
           >
             <FolderOpen size={14} strokeWidth={1.5} />
             Change workspace
