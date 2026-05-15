@@ -3,3 +3,6 @@ src-tauri/target/
 dist/
 .env
 *.local
+.agents
+.claude
+
