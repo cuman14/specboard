@@ -44,6 +44,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
+      - name: Security audit
+        run: pnpm audit --prod --audit-level=moderate
+        continue-on-error: true
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
