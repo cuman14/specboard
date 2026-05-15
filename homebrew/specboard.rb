@@ -9,7 +9,7 @@ class Specboard < Formula
   # Intel: no disponible por limitaciones del runner de CI.
   on_arm do
     url "https://github.com/cuman14/specboard/releases/download/v0.3.3/Specboard_0.3.3_aarch64.dmg"
-    sha256 "b25d18f556804002e6e4256438f5c61971476c2b4816f99781d13b0f98ef2456"
+    sha256 "bdce4fba27821a5de5a8e844b7aa4763588bc874321b766460df5192b8b7083b"
   end
 
   license "MIT"

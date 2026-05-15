@@ -6,7 +6,7 @@
   "architecture": {
     "64bit": {
       "url": "https://github.com/cuman14/specboard/releases/download/v0.3.3/Specboard_0.3.3_x64-setup.exe",
-      "hash": "c452e3a93534dd942abdb14c96098ef2a85933e9f0ba704fa0b4378771c22509"
+      "hash": "e173adcd2a58d0e9e68de782a366b6ab7141bec9e301f93cc0e3256f43549bb6"
     }
   },
   "uninstaller": {
