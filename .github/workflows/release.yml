@@ -12,9 +12,9 @@ jobs:
   # ───────────────────────────────────────────────────────────────
   # JOB 1 — release
   #   Corre SOLO en push a main, filtrando commits del propio bot.
-  #   release-it analiza commits desde el último tag:
-  #     · feat/fix/perf → bump versión, CHANGELOG, tag, GitHub Release vacío.
-  #     · Sin commits relevantes → released=false, workflow termina.
+  #   Emite dos outputs:
+  #     · released=true/false
+  #     · tag=v0.x.y  (el tag que release-it acaba de crear)
   # ───────────────────────────────────────────────────────────────
   release:
     name: Version & tag
@@ -25,6 +25,7 @@ jobs:
       !contains(github.event.head_commit.message, 'chore: update SHA256')
     outputs:
       released: ${{ steps.release.outputs.released }}
+      tag: ${{ steps.release.outputs.tag }}
     steps:
       - name: Checkout rama main con historial completo
         uses: actions/checkout@v4
@@ -69,16 +70,19 @@ jobs:
             echo "❌ release-it falló con código $EXIT_CODE"
             exit $EXIT_CODE
           else
+            # Capturar el tag recién creado por release-it
+            TAG=$(git describe --tags --abbrev=0)
             echo "released=true" >> $GITHUB_OUTPUT
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "✓ Tag creado: $TAG"
           fi
 
   # ───────────────────────────────────────────────────────────────
   # JOB 2 — build
-  #   Corre cuando released=true (push a main) o push de tag v*.
-  #   3 runners en paralelo: Windows, macOS ARM, Linux.
-  #   macos-13 (Intel) eliminado: cola de horas en plan gratuito.
-  #   Cada runner: compila → calcula SHA256 → sube artifact.
-  #   Cache Rust + pnpm: primera build lenta, siguientes ~5-8 min.
+  #   Corre cuando:
+  #     a) released=true → usa el tag que release-it acaba de crear
+  #     b) push directo de tag v* → usa ese tag
+  #   tauri-action siempre recibe el tag correcto, nunca "main".
   # ───────────────────────────────────────────────────────────────
   build:
     name: Build (${{ matrix.platform }})
@@ -111,10 +115,13 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Checkout en el tag
+      # Checkout en el tag correcto:
+      # · Si venimos de release job → needs.release.outputs.tag (ej: v0.3.2)
+      # · Si venimos de push directo de tag → github.ref (ej: refs/tags/v0.3.2)
+      - name: Checkout en el tag correcto
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ needs.release.outputs.tag || github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
@@ -156,13 +163,25 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
+      # El tag correcto viene de release job o del ref del push directo
+      - name: Resolver tag para tauri-action
+        id: tag
+        shell: bash
+        run: |
+          TAG="${{ needs.release.outputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "value=$TAG" >> $GITHUB_OUTPUT
+          echo "✓ Tag para build: $TAG"
+
       - name: Build y publicar binarios en GitHub Release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "Specboard ${{ github.ref_name }}"
+          tagName: ${{ steps.tag.outputs.value }}
+          releaseName: "Specboard ${{ steps.tag.outputs.value }}"
           releaseBody: "See CHANGELOG.md for details."
           releaseDraft: false
           prerelease: false
@@ -220,13 +239,18 @@ jobs:
       - name: Actualizar scoop y homebrew con SHA256 reales
         run: node scripts/update-sha256.js --from-artifacts sha256-artifacts
 
+      - name: Resolver tag para el commit message
+        id: tag
+        run: |
+          TAG="${{ needs.release.outputs.tag }}"
+          if [ -z "$TAG" ]; then TAG="${{ github.ref_name }}"; fi
+          echo "value=$TAG" >> $GITHUB_OUTPUT
+
       - name: Commit y push (solo si hay cambios)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add scoop/specboard.json homebrew/specboard.rb
           git diff --staged --quiet || \
-            git commit -m "chore: update SHA256 hashes for ${{ github.ref_name }} [skip ci]"
+            git commit -m "chore: update SHA256 hashes for ${{ steps.tag.outputs.value }} [skip ci]"
           git push origin main
-
-
