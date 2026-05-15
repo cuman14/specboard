@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Layers, FolderOpen, Clock, ArrowRight } from "lucide-react";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { useChangesStore } from "@/store/changes.store";
-import { openFolderDialog } from "@/lib/tauri-commands";
+import { isTauri, openFolderDialog } from "@/lib/tauri-commands";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -74,22 +74,26 @@ export default function OnboardingPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            {/* Browse button */}
-            <Button
-              onClick={handleOpenFolder}
-              disabled={isLoading}
-              className="w-full"
-            >
-              <FolderOpen size={16} strokeWidth={1.5} />
-              Browse folder…
-            </Button>
+            {/* Browse button - Tauri only */}
+            {isTauri && (
+              <>
+                <Button
+                  onClick={handleOpenFolder}
+                  disabled={isLoading}
+                  className="w-full"
+                >
+                  <FolderOpen size={16} strokeWidth={1.5} />
+                  Browse folder…
+                </Button>
 
-            {/* Divider */}
-            <div className="flex items-center gap-3">
-              <Separator className="flex-1" />
-              <span className="text-xs text-muted-foreground">or enter path</span>
-              <Separator className="flex-1" />
-            </div>
+                {/* Divider */}
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1" />
+                  <span className="text-xs text-muted-foreground">or enter path</span>
+                  <Separator className="flex-1" />
+                </div>
+              </>
+            )}
 
             {/* Manual path input */}
             <form onSubmit={handleManualSubmit} className="flex gap-2">

@@ -3,16 +3,31 @@
 
 @theme {
   --color-bg: #0b1326;
+  --color-background: #0b1326;
+  --color-foreground: #dae2fd;
   --color-surface: #171f33;
+  --color-card: #171f33;
+  --color-card-foreground: #dae2fd;
+  --color-popover: #171f33;
+  --color-popover-foreground: #dae2fd;
   --color-surface-high: #222a3d;
   --color-surface-highest: #2d3449;
   --color-primary: #6366f1;
-  --color-primary-dim: #4f46e5;
-  --color-secondary: #0ea5e9;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #222a3d;
+  --color-secondary-foreground: #dae2fd;
+  --color-muted: #222a3d;
+  --color-muted-foreground: #908fa0;
+  --color-accent: #222a3d;
+  --color-accent-foreground: #dae2fd;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #464554;
+  --color-input: #464554;
+  --color-ring: #6366f1;
   --color-text: #dae2fd;
   --color-text-muted: #c7c4d7;
   --color-text-subtle: #908fa0;
-  --color-border: #464554;
   --color-border-subtle: #2d3449;
   --color-border-active: #6366f1;
   --color-success: #22c55e;
