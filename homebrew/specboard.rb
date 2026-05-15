@@ -8,8 +8,8 @@ class Specboard < Formula
   # Apple Silicon (arm64) — M1/M2/M3/M4
   # Intel: no disponible por limitaciones del runner de CI.
   on_arm do
-    url "https://github.com/cuman14/specboard/releases/download/v0.1.1/specboard_0.3.1_aarch64.dmg"
-    sha256 "REPLACE_WITH_SHA256_ARM"
+    url "https://github.com/cuman14/specboard/releases/download/v0.3.1/Specboard_0.3.1_aarch64.dmg"
+    sha256 "7884dc305c7c19441c2fe77dcc2719bb09aca29737bc37046c6026566ed8f89b"
   end
 
   license "MIT"
