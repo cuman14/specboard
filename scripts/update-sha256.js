@@ -92,3 +92,4 @@ fs.writeFileSync(homebrewPath, homebrew, "utf8");
 console.log(`✓ homebrew/specboard.rb actualizado (arm64 + x64)`);
 
 console.log("\n✅ SHA256 hashes actualizados correctamente");
+

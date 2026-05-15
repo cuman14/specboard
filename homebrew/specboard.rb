@@ -3,8 +3,15 @@
 class Specboard < Formula
   desc "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants"
   homepage "https://github.com/cuman14/specboard"
-  url "https://github.com/cuman14/specboard/releases/download/v0.1.2/specboard_0.1.5_x64.dmg"
-  sha256 "f7456864d8069f0ddbcf4dd8a388d6f82c2a452a849a442d44d61013f2e7883e"
+  version "0.1.1"
+
+  # Apple Silicon (arm64) — M1/M2/M3/M4
+  # Intel: no disponible por limitaciones del runner de CI.
+  on_arm do
+    url "https://github.com/cuman14/specboard/releases/download/v0.1.1/specboard_0.1.1_aarch64.dmg"
+    sha256 "REPLACE_WITH_SHA256_ARM"
+  end
+
   license "MIT"
 
   app "Specboard.app"
