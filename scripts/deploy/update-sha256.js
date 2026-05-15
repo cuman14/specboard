@@ -86,16 +86,10 @@ let homebrew = fs.readFileSync(homebrewPath, "utf8");
 
 const macFile = hashes.macosArm.file; // e.g. Specboard_0.3.0_aarch64.dmg
 
-// Actualizar URL arm64
+// Actualizar URL y sha256 dentro del bloque on_arm
 homebrew = homebrew.replace(
-  /url "https:\/\/github\.com\/cuman14\/specboard\/releases\/download\/[^"]+"/,
-  `url "https://github.com/cuman14/specboard/releases/download/v${version}/${macFile}"`,
-);
-
-// Actualizar sha256 arm64
-homebrew = homebrew.replace(
-  /sha256 "[^"]+"/,
-  `sha256 "${hashes.macosArm.hash}"`,
+  /(on_arm do\n\s+)url ".*?"\n(\s+)sha256 ".*?"/,
+  `$1url "https://github.com/cuman14/specboard/releases/download/v${version}/${macFile}"\n$2sha256 "${hashes.macosArm.hash}"`,
 );
 
 fs.writeFileSync(homebrewPath, homebrew, "utf8");

@@ -215,7 +215,7 @@ See `DESIGN.md` for full reference. Quick summary:
 - **Release-it** - Automated versioning based on conventional commits
 - **@release-it/conventional-changelog** - Changelog generation from conventional commits
 - **GitHub Actions** - Unified release workflow with three jobs
-- **Custom scripts** - `sync-versions.js`, `update-sha256-from-artifacts.js`
+- **Custom scripts** - `scripts/deploy/sync-versions.js`, `scripts/deploy/update-sha256.js`
 - **Package managers** - Scoop, Homebrew, Flatpak
 
 **Release Workflow (.github/workflows/release.yml):**
@@ -241,7 +241,7 @@ The workflow has three jobs:
 3. **Job 3 - update-manifests (Update SHA256 in manifests):**
    - Depends on both release and build jobs
    - Downloads SHA256 artifacts from all platforms
-   - Runs `update-sha256-from-artifacts.js` to update scoop/specboard.json and homebrew/specboard.rb
+   - Runs `scripts/deploy/update-sha256.js` to update scoop/specboard.json and homebrew/specboard.rb
    - Commits and pushes changes with `[skip ci]` to prevent infinite loop
 
 **Important rules:**

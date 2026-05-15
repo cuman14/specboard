@@ -35,7 +35,7 @@
     }
   },
   "hooks": {
-    "after:bump": "node scripts/sync-versions.js"
+    "after:bump": "node scripts/deploy/sync-versions.js"
   }
 }
 

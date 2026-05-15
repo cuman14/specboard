@@ -39,7 +39,7 @@ jobs:
           node-version: lts/*
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
@@ -108,7 +108,7 @@ jobs:
             installer-glob: "src-tauri/target/release/bundle/dmg/*.dmg"
             rust-cache-key: macos-arm
 
-          - platform: ubuntu-22.04
+          - platform: ubuntu-24.04
             artifact-name: sha256-linux
             installer-glob: "src-tauri/target/release/bundle/appimage/*.AppImage"
             rust-cache-key: linux
@@ -141,7 +141,7 @@ jobs:
           key: ${{ matrix.rust-cache-key }}
 
       - name: Install Linux system dependencies
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-24.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -151,7 +151,7 @@ jobs:
             patchelf
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@9
 
       - name: Cache pnpm store
         uses: actions/cache@v4
@@ -182,7 +182,6 @@ jobs:
         with:
           tagName: ${{ steps.tag.outputs.value }}
           releaseName: "Specboard ${{ steps.tag.outputs.value }}"
-          releaseBody: "See CHANGELOG.md for details."
           releaseDraft: false
           prerelease: false
 
@@ -237,7 +236,7 @@ jobs:
           path: sha256-artifacts
 
       - name: Actualizar scoop y homebrew con SHA256 reales
-        run: node scripts/update-sha256.js --from-artifacts sha256-artifacts
+        run: node scripts/deploy/update-sha256.js --from-artifacts sha256-artifacts
 
       - name: Resolver tag para el commit message
         id: tag
