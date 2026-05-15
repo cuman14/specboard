@@ -30,8 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.ref == 'refs/heads/main' &&
-      !startsWith(github.event.head_commit.message, 'chore(release)') &&
-      !startsWith(github.event.head_commit.message, 'chore: update SHA256')
+      !contains(github.event.head_commit.message, 'chore(release)') &&
+      !contains(github.event.head_commit.message, 'chore: update SHA256')
     outputs:
       released: ${{ steps.release.outputs.released }}
     steps:
