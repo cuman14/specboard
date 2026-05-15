@@ -4,7 +4,7 @@
 
 ## What is Specboard?
 
-Specboard is a **desktop GUI application** built with Tauri 2 + React 19 + TypeScript that provides a visual interface for **OpenSpec** — a Spec-Driven Development (SDD) framework for AI coding assistants. It lets developers manage OpenSpec changes, artifacts and specs without touching the terminal.
+Specboard is a **desktop GUI application** built with Tauri 2 + React 19 + TypeScript that provides a visual interface for **OpenSpec** or any framework spec — a Spec-Driven Development (SDD) framework for AI coding assistants. It lets developers manage OpenSpec changes, artifacts and specs without touching the terminal.
 
 OpenSpec lives at: `<project-root>/openspec/` with this structure:
 
