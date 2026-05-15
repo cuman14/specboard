@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layers, FolderOpen, Clock, ArrowRight, Zap } from "lucide-react";
+import { Layers, FolderOpen, Clock, ArrowRight } from "lucide-react";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { useChangesStore } from "@/store/changes.store";
-import { isTauri, openFolderDialog } from "@/lib/tauri-commands";
+import { openFolderDialog } from "@/lib/tauri-commands";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 export default function OnboardingPage() {
@@ -26,12 +25,8 @@ export default function OnboardingPage() {
   const [error, setError] = useState<string | null>(null);
 
   async function handleOpenFolder() {
-    if (isTauri) {
-      const path = await openFolderDialog();
-      if (path) await openWorkspace(path);
-    } else {
-      await openWorkspace("C:/Projects/my-saas-app");
-    }
+    const path = await openFolderDialog();
+    if (path) await openWorkspace(path);
   }
 
   async function handleManualSubmit(e: React.FormEvent) {
@@ -86,7 +81,7 @@ export default function OnboardingPage() {
               className="w-full"
             >
               <FolderOpen size={16} strokeWidth={1.5} />
-              {isTauri ? "Browse folder…" : "Open demo workspace"}
+              Browse folder…
             </Button>
 
             {/* Divider */}
@@ -156,15 +151,6 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Mock mode badge */}
-        {!isTauri && (
-          <div className="flex items-center justify-center">
-            <Badge variant="outline" className="gap-1.5 border-warning/30 bg-warning/10 text-warning px-3 py-2">
-              <Zap size={12} strokeWidth={1.5} />
-              Running in mock mode — Tauri not detected
-            </Badge>
-          </div>
-        )}
       </div>
     </div>
   );
