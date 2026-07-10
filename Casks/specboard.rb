@@ -14,6 +14,14 @@ cask "specboard" do
 
   app "Specboard.app"
 
+  postflight do
+    # App sin firmar/notarizada (proyecto open source sin cuenta Apple Developer):
+    # quita la cuarentena de Gatekeeper para que abra sin el error "está dañado".
+    system_command "/usr/bin/xattr",
+                    args: ["-cr", "#{appdir}/Specboard.app"],
+                    sudo: false
+  end
+
   zap trash: [
     "~/Library/Application Support/com.specboard.app",
     "~/Library/Caches/com.specboard.app",
