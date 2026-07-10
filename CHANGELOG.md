@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.3](https://github.com/cuman14/specboard/compare/v0.6.2...v0.6.3) (2026-07-10)
+
+### 🐛 Bug Fixes
+
+* **cask:** auto-strip Gatekeeper quarantine on install ([040f1bc](https://github.com/cuman14/specboard/commit/040f1bc459741c4d07e23a381eb62d1056a55235))
+
 ## [0.6.2](https://github.com/cuman14/specboard/compare/v0.6.1...v0.6.2) (2026-07-10)
 
 ### 🐛 Bug Fixes
