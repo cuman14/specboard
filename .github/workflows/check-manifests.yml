@@ -1,0 +1,61 @@
+name: Check manifest links
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Casks/**"
+      - "bucket/**"
+      - "scoop/**"
+  schedule:
+    # Diario a las 06:00 UTC — detecta releases/tags borrados manualmente
+    # que dejen URLs de Cask/Scoop apuntando a assets inexistentes.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-links:
+    name: Verify download URLs are live
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract and check URLs
+        run: |
+          set -e
+          FAILED=0
+
+          check_url() {
+            local url="$1"
+            local source="$2"
+            # Sigue redirects (-L), solo cabeceras (-I), falla en 4xx/5xx (-f)
+            if curl -fsSL -I -o /dev/null "$url"; then
+              echo "✓ $url ($source)"
+            else
+              echo "✗ BROKEN: $url ($source)"
+              FAILED=1
+            fi
+          }
+
+          # Casks/specboard.rb → líneas `url "..."`
+          while IFS= read -r url; do
+            [ -n "$url" ] && check_url "$url" "Casks/specboard.rb"
+          done < <(grep -oP '(?<=url ")[^"]+' Casks/specboard.rb)
+
+          # bucket/specboard.json (manifest de Scoop) → campo "url" (ignora plantillas con $version)
+          while IFS= read -r url; do
+            if [[ "$url" == *'$version'* ]]; then
+              continue
+            fi
+            [ -n "$url" ] && check_url "$url" "bucket/specboard.json"
+          done < <(grep -oP '(?<="url": ")[^"]+' bucket/specboard.json)
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "::error::Uno o más assets referenciados en los manifests de instalación no existen (404). Esto rompe 'brew install' / 'scoop install' para los usuarios."
+            exit 1
+          fi
+
+          echo ""
+          echo "Todos los links de los manifests están vivos."

@@ -57,10 +57,18 @@ brew install --cask specboard
 
 ### Linux
 
-**Option 1: AppImage (recommended)**
+**Option 1: Install script (recommended)**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/cuman14/specboard/main/linux/install.sh | bash
+```
+
+Downloads the latest AppImage release and installs it to `~/.local/bin/specboard`.
+
+**Option 2: AppImage (manual)**
 Download from [GitHub Releases](https://github.com/cuman14/specboard/releases/latest)
 
-**Option 2: Flatpak**
+**Option 3: Flatpak**
 
 ```bash
 # After Flathub approval (see FLATPUB_SETUP.md)
@@ -69,7 +77,7 @@ flatpak install flathub com.specboard.app
 
 - Status: Pending Flathub approval (see FLATPUB_SETUP.md for steps)
 
-**Option 3: Package Manager**
+**Option 4: Package Manager**
 
 ```bash
 # Debian/Ubuntu
