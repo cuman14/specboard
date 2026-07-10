@@ -9,7 +9,7 @@ cask "specboard" do
   # Intel: no disponible por limitaciones del runner de CI.
   on_arm do
     url "https://github.com/cuman14/specboard/releases/download/v0.6.1/Specboard_0.6.1_aarch64.dmg"
-    sha256 "e2eeefff75adcd7afed0234b193bd734e6af41c2731b20b2d19a442a6740b193"
+    sha256 "c49c25aec74a7760ecba8900d5e2e50df50f1461ccbcf215a7d81f3ab3339fa5"
   end
 
   app "Specboard.app"
