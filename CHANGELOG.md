@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.2](https://github.com/cuman14/specboard/compare/v0.6.1...v0.6.2) (2026-07-10)
+
+### 🐛 Bug Fixes
+
+* point cask/scoop manifests to v0.6.1, add manifest link check ([3a68747](https://github.com/cuman14/specboard/commit/3a68747e6b913989f09ee2a09f899af5773d827c))
+
 ## 0.6.1 (2026-07-10)
 
 ## [0.6.0](https://github.com/cuman14/specboard/compare/v0.5.7...v0.6.0) (2026-05-24)
