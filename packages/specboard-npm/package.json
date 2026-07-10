@@ -1,0 +1,35 @@
+{
+  "name": "specboard",
+  "version": "0.1.0",
+  "description": "Specboard - Visual GUI for OpenSpec SDD framework",
+  "main": "index.js",
+  "bin": {
+    "specboard": "./bin/specboard"
+  },
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "postinstall.js",
+    "README.md"
+  ],
+  "keywords": [
+    "specboard",
+    "openspec",
+    "sdd",
+    "spec-driven-development",
+    "tauri",
+    "gui"
+  ],
+  "author": "Specboard Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specboard/specboard.git"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

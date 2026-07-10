@@ -1,0 +1,20 @@
+# plane-sync-state.json
+
+Tracks synced OpenSpec specs to Plane Pages.
+
+```json
+{
+  "project_id": "1fd0f38b-d3a8-496e-9aee-c21a9e344785",
+  "last_sync": "2026-05-24T00:00:00.000Z",
+  "pages": {}
+}
+```
+
+## Sync Instructions
+
+When Plane MCP tools become available, run:
+
+1. `node scripts/sync.js analyze` — detect changes
+2. `node scripts/compiler.js openspec/<file>.md` — compile to HTML
+3. Use Plane MCP tools to create/update pages
+4. `node scripts/sync.js record openspec/<file>.md <project_id> <page_id>` — track sync

@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+const { spawn } = require('child_process');
+const path = require('path');
+
+const BINARY_PATH = path.join(__dirname, '..', 'node_modules', '.bin', 'specboard-native');
+
+// Pass through all arguments to the native binary
+const args = process.argv.slice(2);
+
+const child = spawn(BINARY_PATH, args, {
+  stdio: 'inherit',
+  windowsHide: false
+});
+
+child.on('exit', (code) => {
+  process.exit(code ?? 0);
+});
+
+child.on('error', (err) => {
+  if (err.code === 'ENOENT') {
+    console.error('Error: Specboard binary not found.');
+    console.error('Expected at:', BINARY_PATH);
+    console.error('');
+    console.error('Please ensure the postinstall script ran successfully,');
+    console.error('or manually download the binary from GitHub Releases.');
+  } else {
+    console.error('Error spawning Specboard:', err.message);
+  }
+  process.exit(1);
+});

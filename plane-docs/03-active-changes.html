@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; line-height: 1.6;">
+
+<h1 style="font-size: 28px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; border-bottom: 2px solid #6366f1; padding-bottom: 12px;">
+  📋 Active Changes
+</h1>
+<p style="font-size: 16px; color: #6b7280; margin-bottom: 24px;">
+  Dashboard of current active changes with status, proposals, and progress.
+</p>
+
+<!-- Callout -->
+<div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #1e40af;">📌 What are Changes?</strong>
+  <p style="margin: 8px 0 0 0; color: #1e3a5f;">
+    In OpenSpec, a <strong>Change</strong> is a feature, fix, or modification tracked via artifacts: <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 13px;">proposal.md</code>, <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 13px;">specs.md</code>, <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 13px;">design.md</code>, and <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 13px;">tasks.md</code>.
+  </p>
+</div>
+
+<!-- Change 1: transparent-logo-background -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🎨 transparent-logo-background
+</h2>
+
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 16px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #92400e;">Status:</strong> <span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span>
+</div>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">Why</h3>
+<p style="color: #4b5563; margin: 0 0 12px 0;">
+  The current Specboard icons have an opaque background that causes visual issues on both Windows and macOS. A transparent background is the standard for application icons across all platforms and ensures the logo renders cleanly against any surface color.
+</p>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">What Changes</h3>
+<ul style="color: #4b5563; margin: 0 0 12px 0; padding-left: 20px;">
+  <li>Regenerate all icon assets in <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">src-tauri/icons/</code> with transparent backgrounds</li>
+  <li>Update the icon generation script to produce transparent-background icons from a source SVG/PNG</li>
+  <li>Ensure the Windows <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">.ico</code> contains a 32x32 entry with alpha transparency</li>
+  <li>Verify macOS <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">.icns</code> preserves alpha channel across all resolutions</li>
+</ul>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">New Capabilities</h3>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+  <thead>
+    <tr style="background: #f9fafb;">
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Capability</th>
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px 14px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">transparent-icon-generation</code></td>
+      <td style="padding: 10px 14px; color: #6b7280;">Generate all platform icons from source with transparent background, ensuring correct alpha handling per format</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Change 2: homebrew-crossrepo-push -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🍺 homebrew-crossrepo-push
+</h2>
+
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 16px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #92400e;">Status:</strong> <span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span>
+</div>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">Why</h3>
+<p style="color: #4b5563; margin: 0 0 12px 0;">
+  The current release workflow uses a manual <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">git clone</code> with an embedded PAT token URL to push the Homebrew Cask file. This approach is fragile, hard to audit, and exposes the token in the CI log context.
+</p>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">What Changes</h3>
+<ul style="color: #4b5563; margin: 0 0 12px 0; padding-left: 20px;">
+  <li>Replace manual clone with <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">actions/checkout@v4</code> using explicit <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">token</code> parameter</li>
+  <li>Remove the separate "Verify access to tap before clone" step</li>
+  <li>Use a dedicated <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">path</code> for checkout to keep it isolated</li>
+</ul>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">New Capabilities</h3>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+  <thead>
+    <tr style="background: #f9fafb;">
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Capability</th>
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px 14px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">homebrew-crossrepo-push</code></td>
+      <td style="padding: 10px 14px; color: #6b7280;">Replace manual git clone with actions/checkout for pushing Cask updates to external Homebrew tap repository</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Change 3: automated-releases-with-conventional-commits -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🚀 automated-releases-with-conventional-commits
+</h2>
+
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 16px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #92400e;">Status:</strong> <span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span>
+</div>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">Why</h3>
+<p style="color: #4b5563; margin: 0 0 12px 0;">
+  Currently, creating a release requires manual steps: update version numbers in multiple files, create a Git tag, and push it. This is error-prone and inconsistent. By automating the release process based on conventional commits, we eliminate manual version management and ensure consistent, semantic versioning.
+</p>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">What Changes</h3>
+<ul style="color: #4b5563; margin: 0 0 12px 0; padding-left: 20px;">
+  <li><strong>Add semantic-release workflow</strong> — New GitHub Actions workflow that analyzes conventional commits on every push to <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">main</code></li>
+  <li><strong>Automatic version bumping</strong> — Detects <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">feat:</code>, <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">fix:</code>, and <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">BREAKING CHANGE:</code> commits</li>
+  <li><strong>Automatic Git tag creation</strong> — Creates and pushes version tags (<code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">v*</code>) automatically</li>
+  <li><strong>Conventional commit enforcement</strong> — Add commitlint to ensure all commits follow the conventional format</li>
+  <li><strong>Automatic changelog generation</strong> — Generate CHANGELOG.md from commit history</li>
+</ul>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">New Capabilities</h3>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+  <thead>
+    <tr style="background: #f9fafb;">
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Capability</th>
+      <th style="text-align: left; padding: 10px 14px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 14px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">semantic-release-automation</code></td>
+      <td style="padding: 10px 14px; color: #6b7280;">GitHub Actions workflow that detects version changes from conventional commits, bumps versions, creates Git tags</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb; background: #fafafa;">
+      <td style="padding: 10px 14px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">conventional-commit-enforcement</code></td>
+      <td style="padding: 10px 14px; color: #6b7280;">commitlint configuration and CI check ensuring conventional commit format</td>
+    </tr>
+    <tr style="background: #fafafa;">
+      <td style="padding: 10px 14px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">auto-changelog-generation</code></td>
+      <td style="padding: 10px 14px; color: #6b7280;">Automatic generation of CHANGELOG.md following Keep a Changelog format</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Change 4: update-tauri-window-icon -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🖼️ update-tauri-window-icon
+</h2>
+
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 16px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #92400e;">Status:</strong> <span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span>
+</div>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">Why</h3>
+<p style="color: #4b5563; margin: 0 0 12px 0;">
+  The Tauri app window currently shows the default Tauri icon in the Windows taskbar and title bar instead of the Specboard logo. This breaks brand consistency and makes the app harder to identify among open windows.
+</p>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">What Changes</h3>
+<ul style="color: #4b5563; margin: 0 0 12px 0; padding-left: 20px;">
+  <li>Replace the default <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">icon.ico</code> in <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">src-tauri/icons/</code> with a Specboard-branded <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">.ico</code> file</li>
+  <li>Update <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">tauri.conf.json</code> <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">bundle.icon</code> list to reference the correct icon file</li>
+  <li>Ensure the window taskbar icon, title bar icon, and tray icon all show the Specboard logo</li>
+</ul>
+
+<h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 16px 0 8px 0;">Impact</h3>
+<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+  <ul style="margin: 0; padding-left: 20px; color: #4b5563;">
+    <li><code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">src-tauri/icons/icon.ico</code> — replaced with Specboard-branded icon</li>
+    <li><code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">src-tauri/icons/icon.png</code> — replaced with Specboard-branded PNG</li>
+    <li><code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">src-tauri/tauri.conf.json</code> — <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">bundle.icon</code> may be updated</li>
+    <li><strong>No API or logic changes</strong> — purely visual/asset change</li>
+  </ul>
+</div>
+
+<!-- Related Pages -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🔗 Related Pages
+</h2>
+
+<ul style="margin: 0; padding-left: 20px; color: #4b5563;">
+  <li style="margin-bottom: 8px;"><strong>Specboard Overview</strong> — Main project summary</li>
+  <li style="margin-bottom: 8px;"><strong>Release Pipeline</strong> — Automated release process documentation</li>
+  <li style="margin-bottom: 8px;"><strong>Specs Library</strong> — Index of all accumulated specs</li>
+</ul>
+
+</div>

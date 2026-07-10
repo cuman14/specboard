@@ -1,0 +1,39 @@
+{
+  "version": "0.6.0",
+  "description": "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants",
+  "homepage": "https://github.com/cuman14/specboard",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/cuman14/specboard/releases/download/v0.6.0/Specboard_0.6.0_x64-setup.exe",
+      "hash": "c9e305c220262d20d41bd93d2802f215d8a652052837b1c8526dbdf84760ef48"
+    }
+  },
+  "pre_install": [
+    "Stop-Process -Name 'Specboard' -Force -ErrorAction SilentlyContinue"
+  ],
+  "installer": {
+    "script": "Start-Process \"$dir\\$fname\" -ArgumentList '/S' -Wait; Remove-Item \"$dir\\$fname\" -Force"
+  },
+  "uninstaller": {
+    "script": [
+      "$paths = @('HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*')",
+      "$entry = Get-ItemProperty $paths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like '*Specboard*' } | Select-Object -First 1",
+      "if ($entry -and $entry.UninstallString) {",
+      "  $uninstStr = $entry.UninstallString -replace ' /_?\\?.*$', ''",
+      "  $exePath = ($uninstStr -replace '\"', '').Trim()",
+      "  if (Test-Path $exePath) { Start-Process $exePath -ArgumentList '/S' -Wait -ErrorAction SilentlyContinue }",
+      "}"
+    ]
+  },
+  "checkver": {
+    "github": "https://github.com/cuman14/specboard"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/cuman14/specboard/releases/download/v$version/Specboard_$version_x64-setup.exe"
+      }
+    }
+  }
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; line-height: 1.6;">
+
+<!-- Header -->
+<h1 style="font-size: 28px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; border-bottom: 2px solid #6366f1; padding-bottom: 12px;">
+  🎯 Specboard — Project Overview
+</h1>
+<p style="font-size: 16px; color: #6b7280; margin-bottom: 24px;">
+  A desktop GUI application for managing OpenSpec changes, artifacts, and specs — visually.
+</p>
+
+<!-- Callout -->
+<div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0;">
+  <strong style="color: #1e40af;">💡 What is Specboard?</strong>
+  <p style="margin: 8px 0 0 0; color: #1e3a5f;">
+    Specboard is a <strong>Tauri 2 + React 19</strong> desktop application that provides a visual interface for <strong>OpenSpec</strong> — a Spec-Driven Development (SDD) framework for AI coding assistants. It lets developers manage OpenSpec changes, artifacts, and specs without touching the terminal.
+  </p>
+</div>
+
+<!-- Tech Stack -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🛠️ Tech Stack
+</h2>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+  <thead>
+    <tr style="background: #f9fafb;">
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Layer</th>
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Technology</th>
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; color: #374151;">Desktop Shell</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">Tauri 2</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Rust backend, WebView2 frontend</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb; background: #fafafa;">
+      <td style="padding: 10px 16px; color: #374151;">UI Framework</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">React 19 + TypeScript</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Hooks-first, no class components</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; color: #374151;">Styling</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">Tailwind CSS v4</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">CSS vars for design tokens</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb; background: #fafafa;">
+      <td style="padding: 10px 16px; color: #374151;">Components</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">shadcn/ui (Radix UI)</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Copy-paste, fully owned</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; color: #374151;">State</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">Zustand</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Global stores, no Redux</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb; background: #fafafa;">
+      <td style="padding: 10px 16px; color: #374151;">Routing</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">React Router v7</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Client-side SPA inside Tauri</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; color: #374151;">Drag & Drop</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">@dnd-kit</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Kanban board</td>
+    </tr>
+    <tr style="background: #fafafa;">
+      <td style="padding: 10px 16px; color: #374151;">Package Manager</td>
+      <td style="padding: 10px 16px;"><code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px;">pnpm</code></td>
+      <td style="padding: 10px 16px; color: #6b7280;">NOT npm or yarn</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Architecture Overview -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🏗️ Architecture Overview
+</h2>
+
+<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+  <h3 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 12px 0;">System Layers</h3>
+  <ol style="margin: 0; padding-left: 20px; color: #4b5563;">
+    <li style="margin-bottom: 8px;"><strong>Tauri Rust Backend</strong> — IPC commands, file system watcher, OpenSpec CLI subprocess execution</li>
+    <li style="margin-bottom: 8px;"><strong>React Frontend</strong> — SPA with router, Zustand stores, shadcn/ui components</li>
+    <li style="margin-bottom: 8px;"><strong>OpenSpec Structure</strong> — <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">openspec/changes/</code>, <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">openspec/specs/</code>, <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px;">openspec/archive/</code></li>
+  </ol>
+</div>
+
+<!-- Active Changes Summary -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  📋 Active Changes
+</h2>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+  <thead>
+    <tr style="background: #f9fafb;">
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Change</th>
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Status</th>
+      <th style="text-align: left; padding: 12px 16px; border-bottom: 2px solid #e5e7eb; font-weight: 600; color: #374151;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; font-weight: 500;">transparent-logo-background</td>
+      <td style="padding: 10px 16px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Regenerate all icon assets with transparent backgrounds</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb; background: #fafafa;">
+      <td style="padding: 10px 16px; font-weight: 500;">homebrew-crossrepo-push</td>
+      <td style="padding: 10px 16px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Homebrew Cask distribution across repositories</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #e5e7eb;">
+      <td style="padding: 10px 16px; font-weight: 500;">automated-releases-with-conventional-commits</td>
+      <td style="padding: 10px 16px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Automated versioning, changelog, and release pipeline</td>
+    </tr>
+    <tr style="background: #fafafa;">
+      <td style="padding: 10px 16px; font-weight: 500;">update-tauri-window-icon</td>
+      <td style="padding: 10px 16px;"><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">In Progress</span></td>
+      <td style="padding: 10px 16px; color: #6b7280;">Update Tauri window icon configuration</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Specs Summary -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  📚 Accumulated Specs (13)
+</h2>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px;">
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">features/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">Dashboard features, archive actions, timestamps</p>
+  </div>
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">task-completion-toggle/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">Task toggle behavior, write_artifact command</p>
+  </div>
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">realtime-md-watch/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">Real-time markdown file watching and sync</p>
+  </div>
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">github-actions-release/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">Cross-platform Tauri builds via GitHub Actions</p>
+  </div>
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">shadcn-component-library/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">shadcn/ui component specs and patterns</p>
+  </div>
+  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px;">
+    <strong style="color: #166534;">design-token-integration/spec.md</strong>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #15803d;">CSS variable design token system</p>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<h2 style="font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 32px 0 16px 0;">
+  🔗 Related Pages
+</h2>
+
+<ul style="margin: 0; padding-left: 20px; color: #4b5563;">
+  <li style="margin-bottom: 8px;"><strong>Architecture</strong> — System architecture and design principles</li>
+  <li style="margin-bottom: 8px;"><strong>Active Changes</strong> — Dashboard of current active changes with status</li>
+  <li style="margin-bottom: 8px;"><strong>Specs Library</strong> — Index of all accumulated specs</li>
+  <li style="margin-bottom: 8px;"><strong>Release Pipeline</strong> — Documentation of the automated release process</li>
+  <li style="margin-bottom: 8px;"><strong>UI Components</strong> — shadcn component library and design tokens</li>
+</ul>
+
+</div>

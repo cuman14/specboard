@@ -1,0 +1,291 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  # ───────────────────────────────────────────────────────────────
+  # JOB 1 — release
+  #   Corre SOLO en push a main, filtrando commits del propio bot.
+  #   Emite dos outputs:
+  #     · released=true/false
+  #     · tag=v0.x.y  (el tag que release-it acaba de crear)
+  # ───────────────────────────────────────────────────────────────
+  release:
+    name: Version & tag
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/main' &&
+      !contains(github.event.head_commit.message, 'chore(release)') &&
+      !contains(github.event.head_commit.message, 'chore: update SHA256') &&
+      !contains(github.event.head_commit.message, 'chore: update specboard')
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - name: Checkout rama main con historial completo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Security audit
+        run: pnpm audit --prod --audit-level=moderate
+        continue-on-error: true
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/cuman14/specboard.git
+          git checkout main
+
+      - name: Run release-it
+        id: release
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          set +e
+          OUTPUT=$(pnpm release-it --ci 2>&1)
+          EXIT_CODE=$?
+          set -e
+          echo "$OUTPUT"
+
+          if echo "$OUTPUT" | grep -q "No commits since the last release"; then
+            echo "released=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  Sin commits relevantes — se omite el release"
+          elif [ $EXIT_CODE -ne 0 ]; then
+            echo "released=false" >> $GITHUB_OUTPUT
+            echo "❌ release-it falló con código $EXIT_CODE"
+            exit $EXIT_CODE
+          else
+            TAG=$(git describe --tags --abbrev=0)
+            echo "released=true" >> $GITHUB_OUTPUT
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "✓ Tag creado: $TAG"
+          fi
+
+  # ───────────────────────────────────────────────────────────────
+  # JOB 2 — build
+  #   Corre cuando:
+  #     a) released=true → usa el tag que release-it acaba de crear
+  #     b) push directo de tag v* → usa ese tag
+  #   tauri-action siempre recibe el tag correcto, nunca "main".
+  # ───────────────────────────────────────────────────────────────
+  build:
+    name: Build (${{ matrix.platform }})
+    needs: release
+    if: |
+      always() && (
+        startsWith(github.ref, 'refs/tags/v') ||
+        needs.release.outputs.released == 'true'
+      )
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            artifact-name: sha256-windows
+            installer-glob: "src-tauri/target/release/bundle/nsis/*-setup.exe"
+            rust-cache-key: windows
+
+          - platform: macos-latest
+            artifact-name: sha256-macos-arm
+            installer-glob: "src-tauri/target/release/bundle/dmg/*.dmg"
+            rust-cache-key: macos-arm
+
+          - platform: ubuntu-24.04
+            artifact-name: sha256-linux
+            installer-glob: "src-tauri/target/release/bundle/appimage/*.AppImage"
+            rust-cache-key: linux
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout en el tag correcto
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.tag || github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Refresh PATH with Rust binaries
+        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Cache Rust (Cargo)
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+          key: ${{ matrix.rust-cache-key }}
+
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ matrix.platform }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ matrix.platform }}-
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Resolver tag para tauri-action
+        id: tag
+        shell: bash
+        run: |
+          TAG="${{ needs.release.outputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "value=$TAG" >> $GITHUB_OUTPUT
+          echo "✓ Tag para build: $TAG"
+
+      - name: Build y publicar binarios en GitHub Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # APPLE_IDENTITY='-' deshabilita code signing en macOS intencionalmente.
+          # Cambiar cuando se configure un certificado real de Apple.
+          APPLE_IDENTITY: ${{ matrix.platform == 'macos-latest' && '-' || '' }}
+        with:
+          tagName: ${{ steps.tag.outputs.value }}
+          releaseName: "Specboard ${{ steps.tag.outputs.value }}"
+          releaseDraft: false
+          prerelease: false
+
+      - name: Calcular SHA256 del instalador
+        shell: bash
+        run: |
+          FILE=$(ls ${{ matrix.installer-glob }} 2>/dev/null | head -1)
+          if [ -z "$FILE" ]; then
+            echo "ERROR: instalador no encontrado con patrón ${{ matrix.installer-glob }}"
+            exit 1
+          fi
+          # sha256sum existe en Linux y Windows; macOS usa shasum
+          if command -v sha256sum &>/dev/null; then
+            HASH=$(sha256sum "$FILE" | awk '{print $1}')
+          else
+            HASH=$(shasum -a 256 "$FILE" | awk '{print $1}')
+          fi
+          FILENAME=$(basename "$FILE")
+          echo "file=$FILENAME" > sha256.env
+          echo "hash=$HASH" >> sha256.env
+          echo "✓ $FILENAME → $HASH"
+
+      - name: Subir SHA256 como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: sha256.env
+          retention-days: 1
+
+  # ───────────────────────────────────────────────────────────────
+  # JOB 3 — update-manifests
+  #   Espera a que los 3 builds terminen correctamente.
+  #   Descarga los artifacts SHA256, actualiza scoop y homebrew local,
+  #   y sincroniza el Cask al tap remoto (homebrew-specboard).
+  #   Commitea con [skip ci] para no disparar otro workflow.
+  # ───────────────────────────────────────────────────────────────
+  update-manifests:
+    name: Update SHA256 in manifests
+    needs: [release, build]
+    if: |
+      needs.build.result == 'success' &&
+      needs.release.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Descargar los artifacts SHA256
+        uses: actions/download-artifact@v4
+        with:
+          path: sha256-artifacts
+
+      - name: Actualizar scoop y homebrew con SHA256 reales
+        run: node scripts/deploy/update-sha256.js --from-artifacts sha256-artifacts
+
+      - name: Resolver tag para el commit message
+        id: tag
+        run: |
+          TAG="${{ needs.release.outputs.tag }}"
+          if [ -z "$TAG" ]; then TAG="${{ github.ref_name }}"; fi
+          echo "value=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Commit y push SHA256 en specboard (solo si hay cambios)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add bucket/specboard.json Casks/specboard.rb
+          git diff --staged --quiet || \
+            git commit -m "chore: update SHA256 hashes for ${{ steps.tag.outputs.value }} [skip ci]"
+          git push origin main
+
+      # ── Sincronización al tap de Homebrew ──────────────────────
+      # actions/checkout with RELEASE_TOKEN handles both auth and clone.
+      # If the token lacks access, checkout fails with a clear 403 error.
+      # RELEASE_TOKEN needs "Contents: Read & Write" on cuman14/homebrew-specboard.
+      # ───────────────────────────────────────────────────────────
+      - name: Checkout Homebrew tap repo
+        uses: actions/checkout@v4
+        with:
+          repository: cuman14/homebrew-specboard
+          token: ${{ secrets.RELEASE_TOKEN }}
+          path: homebrew-tap
+
+      - name: Copy updated Cask to tap repo
+        run: cp Casks/specboard.rb homebrew-tap/Casks/specboard.rb
+
+      - name: Commit and push Cask update
+        working-directory: homebrew-tap
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/specboard.rb
+          git diff --staged --quiet || \
+            git commit -m "chore: update specboard to ${{ steps.tag.outputs.value }} [skip ci]"
+          git push origin main

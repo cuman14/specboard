@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.specboard.app</id>
+  <name>Specboard</name>
+  <summary>Visual GUI for OpenSpec</summary>
+  <description>
+    <p>Specboard gives developers a visual interface to manage OpenSpec changes, specs and artifacts without touching the terminal.</p>
+  </description>
+  <url type="homepage">https://github.com/cuman14/specboard</url>
+  <url type="bugtracker">https://github.com/cuman14/specboard/issues</url>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <developer_name>cuman14</developer_name>
+  <content_attribute type="id">com.specboard.app</content_attribute>
+  <releases>
+    <release version="1.1.0" date="2026-05-12" />
+  </releases>
+</component>

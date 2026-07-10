@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Specboard
+Comment=Visual GUI for OpenSpec
+Exec=specboard
+Icon=com.specboard.app
+Type=Application
+Categories=Development;IDE;
+Terminal=false

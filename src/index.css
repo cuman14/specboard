@@ -1,0 +1,116 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-bg: #0b1326;
+  --color-background: #0b1326;
+  --color-foreground: #dae2fd;
+  --color-surface: #171f33;
+  --color-card: #171f33;
+  --color-card-foreground: #dae2fd;
+  --color-popover: #171f33;
+  --color-popover-foreground: #dae2fd;
+  --color-surface-high: #222a3d;
+  --color-surface-highest: #2d3449;
+  --color-primary: #6366f1;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #222a3d;
+  --color-secondary-foreground: #dae2fd;
+  --color-muted: #222a3d;
+  --color-muted-foreground: #908fa0;
+  --color-accent: #222a3d;
+  --color-accent-foreground: #dae2fd;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #464554;
+  --color-input: #464554;
+  --color-ring: #6366f1;
+  --color-text: #dae2fd;
+  --color-text-muted: #c7c4d7;
+  --color-text-subtle: #908fa0;
+  --color-border-subtle: #2d3449;
+  --color-border-active: #6366f1;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #0ea5e9;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  --spacing-utility-bar: 48px;
+  --spacing-sidebar: 240px;
+}
+
+:root {
+  --background: #0b1326;
+  --foreground: #dae2fd;
+  --card: #171f33;
+  --card-foreground: #dae2fd;
+  --popover: #171f33;
+  --popover-foreground: #dae2fd;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #222a3d;
+  --secondary-foreground: #dae2fd;
+  --muted: #222a3d;
+  --muted-foreground: #908fa0;
+  --accent: #222a3d;
+  --accent-foreground: #dae2fd;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #464554;
+  --input: #464554;
+  --ring: #6366f1;
+  --radius: 0.25rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-subtle);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.tauri-drag-region {
+  -webkit-app-region: drag;
+}

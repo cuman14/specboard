@@ -1,0 +1,41 @@
+{
+  "git": {
+    "commitMessage": "chore(release): v${version} [skip ci]",
+    "tagName": "v${version}",
+    "pushRepo": "origin",
+    "requireCleanWorkingDir": false
+  },
+  "npm": {
+    "publish": false
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Specboard v${version}",
+    "autoGenerate": false,
+    "tokenRef": "RELEASE_TOKEN"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "bumpStrict": true,
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          { "type": "feat", "section": "✨ New Features" },
+          { "type": "fix", "section": "🐛 Bug Fixes" },
+          { "type": "perf", "section": "⚡ Performance" },
+          { "type": "refactor", "section": "♻️ Refactor" },
+          { "type": "docs", "section": "📝 Documentation" },
+          { "type": "build", "section": "🏗️ Build" },
+          { "type": "ci", "section": "🤖 CI" },
+          { "type": "chore", "hidden": true },
+          { "type": "style", "hidden": true },
+          { "type": "test", "hidden": true }
+        ]
+      },
+      "infile": "CHANGELOG.md"
+    }
+  },
+  "hooks": {
+    "after:bump": "node scripts/deploy/sync-versions.js"
+  }
+}
