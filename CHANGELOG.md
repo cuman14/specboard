@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.6.1 (2026-07-10)
+
 ## [0.6.0](https://github.com/cuman14/specboard/compare/v0.5.7...v0.6.0) (2026-05-24)
 
 ### ✨ New Features

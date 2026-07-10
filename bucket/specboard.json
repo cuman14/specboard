@@ -1,11 +1,11 @@
 {
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Visual GUI for OpenSpec — Spec-Driven Development (SDD) for AI coding assistants",
   "homepage": "https://github.com/cuman14/specboard",
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/cuman14/specboard/releases/download/v0.6.0/Specboard_0.6.0_x64-setup.exe",
+      "url": "https://github.com/cuman14/specboard/releases/download/v0.6.1/Specboard_0.6.1_x64-setup.exe",
       "hash": "c9e305c220262d20d41bd93d2802f215d8a652052837b1c8526dbdf84760ef48"
     }
   },
